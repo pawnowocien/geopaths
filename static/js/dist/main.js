@@ -101,20 +101,55 @@ function generateBoard() {
     let width = canvas.width;
     let height = canvas.height;
     let sides = 0;
-    let offset = 1;
-    let size = 40;
+    let space_between = 5;
+    let rad = 40;
     let spacing = 0;
-    let x_dist = 0;
-    let y_dist = 0;
+    let a;
     switch (selectedShape) {
         case 'triangle':
             sides = 3;
-            spacing = Math.min(width / cols, height / rows);
+            // let max_w = (2 * width - (cols - 3) *space_between) / (cols + 1);
+            // let max_h = (height - space_between) / (rows * Math.sqrt(3)); // I'm too tired to figure out the actual math, so this approximation will do
+            // a = Math.min(max_w, max_h);
+            a = 20;
+            spacing = a * 2 + space_between;
+            rad = a / Math.sqrt(3);
+            // console.log("max_w:", max_w);
+            // console.log("max_h:", max_h);
+            let d = spacing;
+            let h = Math.sqrt(Math.pow((2 * a + d), 2) - Math.pow((Math.sqrt(3) * a + d / 2), 2)) - 3 * a;
+            console.log("a:", a);
+            console.log("spacing:", spacing);
+            console.log("rad:", rad);
+            console.log("h:", h);
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    let shape;
+                    if (col % 2 === 0) {
+                        const x = a / 2 + space_between + (space_between + a) * col / 2;
+                        const y = rad / 3 + space_between + row * (3 * rad / 2 + h + space_between);
+                        shape = new Polygon(x, y, rad, sides, Math.PI);
+                    }
+                    else {
+                        shape = new Polygon(0, 0, rad, sides);
+                    }
+                    shape.draw(ctx);
+                }
+            }
             break;
         case 'square':
             sides = 4;
-            spacing = Math.min(width / cols, height / rows);
-            size = spacing - offset;
+            spacing = Math.min((width - space_between) / cols, (height - space_between) / rows);
+            a = (spacing - space_between);
+            rad = Math.sqrt(2) * a / 2;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = a / 2 + spacing * col + space_between;
+                    const y = a / 2 + spacing * row + space_between;
+                    const shape = new Polygon(x, y, rad, sides);
+                    shape.draw(ctx);
+                }
+            }
             break;
         case 'hexagon':
             sides = 6;
@@ -122,31 +157,6 @@ function generateBoard() {
         default:
             ctx.fillStyle = 'black';
             break;
-    }
-    x_dist = size + offset;
-    y_dist = size + offset;
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            const x = (size + 1) / 2 + col * x_dist;
-            const y = (size + 1) / 2 + row * y_dist;
-            let rot = 0;
-            let shape;
-            if (selectedShape == 'triangle') {
-                const x = (size + 1) / 2 + col * x_dist;
-                const y = (size + 1) / 2 + Math.floor(row / 2) * y_dist;
-                if (row % 2 == 0 && selectedShape == 'triangle') {
-                    rot = Math.PI;
-                    shape = new Polygon(x, y, size / 2, sides, rot);
-                }
-                else {
-                    shape = new Polygon(x + size / 2, y + size / 3, size / 2, sides);
-                }
-            }
-            else {
-                shape = new Polygon(x, y, size / 2, sides, rot);
-            }
-            shape.draw(ctx);
-        }
     }
 }
 sliderWidth.addEventListener('input', generateBoard);
