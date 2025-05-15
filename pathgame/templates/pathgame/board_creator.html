@@ -1,0 +1,70 @@
+{% extends 'pathgame/base.html' %}
+{% load static %}
+
+{% block title %}Board Creator{% endblock %}
+
+{% block content %}
+
+{% comment %} <div class="p-4 space-y-4 w-1/2 mx-auto bg-black border-2">
+
+    <div class="flex flex-row w-max items-center">
+        <label for="slider-a" class="w-40">Wartość A:</label>
+        <input type="range" id="slider-a" min="1" max="10" value="1" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-black inset-ring-1">
+        <input type="number" id="input-a" min="1" max="10" value="1" class="border p-1 w-16 ml-2">
+    </div>
+
+    <div class="flex flex-row w-max items-center">
+        <label for="slider-b" class="w-40">Wartość B:</label>
+        <input type="range" id="slider-b" min="1" max="10" value="1" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-black inset-ring-1">
+        <input type="number" id="input-b" min="1" max="10" value="1" class="border p-1 w-16 ml-2">
+    </div>
+
+    <div>
+        <label for="select-c">Shape:</label>
+        <select id="select-c" class="border p-1 bg-black" >
+            <option value="3">Triangles</option>
+            <option value="4" selected="selected">Squares</option>
+            <option value="6">Hexagons</option>
+        </select>
+    </div>
+
+    <div class="mt-4 font-bold">
+        Wynik: <span id="result">3</span>
+    </div>
+
+</div> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Grid Generator</title>
+    <style>
+        svg {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+    <label for="sliderWidth">Width:</label>
+    <input type="range" id="sliderWidth" min="1" max="20" value="10">
+    <span id="sliderWidthValue">10</span> px
+    <br>
+
+    <label for="sliderHeight">Height:</label>
+    <input type="range" id="sliderHeight" min="1" max="20" value="10">
+    <span id="sliderHeightValue">10</span> px
+    <br>
+
+    <svg id="grid" width="400" height="400"></svg>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
+<script src="{% static 'js/dist/main.js' %}"></script>
+
+{% endblock %}

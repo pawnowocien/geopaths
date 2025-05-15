@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/**
+  * A catch-all path to Django template files, JavaScript, and Python files
+  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
+  *
+  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
+  * the scope of this path.
+  */
+@source "../../../**/*.{html,py,js}";
+
+
+@theme {
+    --color-navy: #00060a;
+    --color-dark-green: #0d150d;
+    --color-dirty-red: #220b0b;
+    --color-neon-blue: rgb(0, 183, 255);
+
+    --color-weizen: #FFE696;
+    --color-pale-lager: #FFCC66;
+    --color-pilsner: #F0B450;
+    --color-ale: #DC783C;
+    --color-marzen: #C85A32;
+    --color-bock: #BE6428;
+    --color-porter: #3C2814;
+    --color-dark-lager: #1E140A;
+    --color-stout: #140A05;
+
+    --color-weizen-dark: #8f7c39;
+    --color-pale-lager-dark: #946217;
+    --color-pilsner-dark: #744a13;
+    --color-ale-dark: #6d361a;
+    --color-marzen-dark: #520e05;
+    --color-bock-dark: #632908;
+    --color-porter-dark: #141311;
+    --color-dark-lager-dark: #220f02;
+    --color-stout-dark: #0f0601;
+}
