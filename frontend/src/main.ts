@@ -125,46 +125,38 @@ function generateBoard() {
     let height = canvas.height;
 
     let sides = 0;
-    let space_between = 5;
+    let space_between = 4;
     let rad = 40;
-    let spacing = 0;
 
-    let a;
-
+    let a; 
+    let max_w = 0;
+    let max_h = 0;
+    // let h = 0;
     switch (selectedShape) {
         case 'triangle':
             sides = 3;
             
-            // let max_w = (2 * width - (cols - 3) *space_between) / (cols + 1);
-            // let max_h = (height - space_between) / (rows * Math.sqrt(3)); // I'm too tired to figure out the actual math, so this approximation will do
-            // a = Math.min(max_w, max_h);
-            a = 20;
-            spacing = a * 2 + space_between;
+            max_w = 2 * (width - space_between) / (cols + 1) - space_between;
+            max_h = (height - space_between) / rows - 2 * space_between; // I'm too tired to figure out the actual math, so this approximation will do
+            max_h *= 2/Math.sqrt(3);
+            a = Math.min(max_w, max_h);
             rad = a / Math.sqrt(3);
             
-            // console.log("max_w:", max_w);
-            // console.log("max_h:", max_h);
-
-
-            let d = spacing;
-            let h = Math.sqrt((2*a + d)**2 - (Math.sqrt(3) * a + d / 2)**2) - 3 * a;
-
-            console.log("a:", a);
-            console.log("spacing:", spacing);
-            console.log("rad:", rad);
-            console.log("h:", h);
+            // h = Math.sqrt((rad+space_between)**2 - (space_between+a)**2 / 4) - rad/2;
 
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
                     let shape: Polygon;
-                    if (col % 2 === 0) {
-                        const x = a / 2 + space_between + (space_between + a) * col / 2;
-                        const y = rad / 3 + space_between + row * (3 * rad / 2 + h + space_between);
+                    const x = a / 2 + space_between + (space_between + a) * col / 2;
+                    let y = rad / 2  + space_between + row * (3 * rad / 2 + 2 * space_between);
+
+                    if ((row + col) % 2 === 0) {
                         shape = new Polygon(x, y, rad, sides, Math.PI);
                     } else {
-
-                        shape = new Polygon(0, 0, rad, sides);
+                        y += rad / 2 + space_between;
+                        shape = new Polygon(x, y, rad, sides);
                     }
+
                     shape.draw(ctx);
                 }
             }
@@ -173,7 +165,11 @@ function generateBoard() {
 
         case 'square':
             sides = 4;
-            spacing = Math.min((width - space_between) / cols, (height - space_between) / rows);
+
+            max_w = (width - space_between) / cols;
+            max_h = (height - space_between) / rows;
+            let spacing = Math.min(max_w, max_h);
+
             a = (spacing - space_between);
             rad = Math.sqrt(2) * a / 2;
             
@@ -185,10 +181,34 @@ function generateBoard() {
                     shape.draw(ctx);
                 }
             }
-
             break;
         case 'hexagon':
             sides = 6;
+            
+            max_w = (width - space_between * (cols + 1)) / (1 + 2 * cols);
+            max_h = (height - space_between) / rows - space_between;
+            max_h *= Math.sqrt(3)/2;
+            // spacing = Math.min((width - space_between) / cols, (height - space_between) / rows);
+            let s_r = Math.min(max_w, max_h);
+            rad = 2 * s_r / Math.sqrt(3);
+            
+            // h = Math.sqrt((rad+space_between)**2 - (space_between+s_r)**2 / 4) - rad/2;
+            // let h2 = 3 * Math.sqrt(3) * s_r**2 / (4 * rad) - s_r;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = s_r + (2 * s_r + space_between) * col + space_between;
+                    const y = rad + (3 * rad / 2 + space_between) * row + space_between;
+
+                    let shape: Polygon;
+                    if (row % 2 === 0) {
+                        shape = new Polygon(x, y, rad, sides, Math.PI / 2);
+                    } else {
+                        shape = new Polygon(x + s_r + space_between / 2, y, rad, sides, Math.PI / 2);
+                    }
+                    shape.draw(ctx);
+                }
+            }
             break;
         default:
             ctx.fillStyle = 'black';
