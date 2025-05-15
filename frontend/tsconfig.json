@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES6",
+    "lib": ["es2016", "dom"],
     "module": "ES6",
     "outDir": "../static/js/dist",
     "rootDir": "./src",
-    "sourceMap": true
+    "sourceMap": true,
+    "strict": true,
   },
   "include": ["src"]
 }

@@ -58,7 +58,22 @@
     <span id="sliderHeightValue">10</span> px
     <br>
 
-    <svg id="grid" width="400" height="400"></svg>
+    <div>
+        <label for="select_shape">Shape:</label>
+        <select id="select_shape" class="border p-1 bg-black" >
+            <option value="triangle">Triangles</option>
+            <option value="square" selected="selected">Squares</option>
+            <option value="hexagon">Hexagons</option>
+        </select>
+    </div>
+
+    <br>
+
+
+
+    <canvas id="canvas" width="600" height="600" class="bg-gray-800"></canvas>
+
+    <svg id="grid" width="800" height="800"></svg>
 
     <script src="app.js"></script>
 </body>
