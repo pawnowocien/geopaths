@@ -5,7 +5,7 @@ export function generateBoardSVG(width, height, sides, gridElement, boardId, boa
         if (boardId !== undefined) {
             for (const point of boardPoints || []) {
                 if (point.row === row && point.col === col) {
-                    return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "#000000");
+                    return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, point.color);
                 }
             }
             return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "");

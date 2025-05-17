@@ -1,0 +1,1 @@
+{"version":3,"file":"color_state.js","sourceRoot":"","sources":["../../../frontend/src/color_state.ts"],"names":[],"mappings":"AAAA,IAAI,kBAAkB,GAAW,QAAQ,CAAC;AAE1C,MAAM,UAAU,QAAQ;IACtB,OAAO,kBAAkB,CAAC;AAC5B,CAAC;AAED,MAAM,UAAU,QAAQ,CAAC,KAAa;IACpC,kBAAkB,GAAG,KAAK,CAAC;AAC7B,CAAC"}

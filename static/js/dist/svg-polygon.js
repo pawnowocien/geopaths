@@ -30,7 +30,7 @@ export class SVGPolygon {
         }
         const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         polygon.setAttribute('points', points.trim());
-        polygon.setAttribute('fill', 'white');
+        polygon.setAttribute('fill', '#888888');
         polygon.setAttribute('stroke', 'black');
         polygon.dataset.row = this.row.toString();
         polygon.dataset.col = this.col.toString();

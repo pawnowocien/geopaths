@@ -1,5 +1,6 @@
 import { SVGPolygon } from "./svg-polygon.js";
 import { getCSRFToken } from "./csrf.js";
+import { getColor, setColor } from "./color-state.js";
 
 export class SVGPolygonExtended extends SVGPolygon {
     board: number
@@ -19,9 +20,6 @@ export class SVGPolygonExtended extends SVGPolygon {
         super(x, y, radius, sides, row, col, rotation);
         this.board = board;
         this.point_color = point_color;
-        if (point_color !== "") {
-            console.log(`Point color: ${point_color}`);
-        }
     }
 
     draw(): SVGGElement {
@@ -54,27 +52,37 @@ export class SVGPolygonExtended extends SVGPolygon {
 
         
         group.addEventListener('mouseenter', () => {
-            if (this.point_color === "") {
+            if (getColor() !== "") {
+                circle.setAttribute('fill', getColor());
+                circle.setAttribute('opacity', '0.5');
                 circle.style.display = 'block';
+            } else if (this.point_color !== "") {
+                circle.setAttribute('fill', 'red');
+                circle.setAttribute('opacity', '0.8');
+                circle.style.display = 'block';
+            } else {
+                circle.style.display = 'none';
             }
         });
         group.addEventListener('mouseleave', () => {
             if (this.point_color === "") {
                 circle.style.display = 'none';
+            } else {
+                circle.setAttribute('fill', this.point_color);
+                circle.setAttribute('opacity', '1');
+                circle.style.display = 'block';
             }
         });
 
 
 
         group.addEventListener('click', () => {
-            console.log(`Polygon group clicked at row ${this.row}, col ${this.col}, board ${this.board}`);
 
-            if (this.point_color !== "") {
-                this.point_color = "";
-                set_hover_color();
+            this.point_color = getColor();
+            if (getColor() === "") {
+                circle.style.display = 'none';
             } else {
-                this.point_color = "#000000";
-                set_static_color(this.point_color);
+                circle.style.display = 'block';
             }
 
 
@@ -88,6 +96,7 @@ export class SVGPolygonExtended extends SVGPolygon {
                     row: this.row,
                     col: this.col,
                     board: this.board,
+                    color: this.point_color,
                 })
             })
             .then(response => {

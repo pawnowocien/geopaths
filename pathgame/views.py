@@ -86,15 +86,23 @@ def update_board_cell(request):
         row = int(data.get('row'))
         col = int(data.get('col'))
         board_id = int(data.get('board'))
+        color = str(data.get('color'))
 
-        if row is None or col is None or board_id is None:
+        if row is None or col is None or board_id is None or color is None:
             return JsonResponse({'error': 'Missing data'}, status=400)
         
+
+        
         board = Board.objects.get(pk=board_id, creator=request.user)
+
         if BoardPoint.objects.filter(board=board, row=row, col=col).exists():
-            BoardPoint.objects.filter(board=board, row=row, col=col).delete()
+            if color == "":
+                BoardPoint.objects.filter(board=board, row=row, col=col).delete()
+            else:
+                BoardPoint.objects.filter(board=board, row=row, col=col).update(color=color)
         else:
-            BoardPoint.objects.create(board=board, row=row, col=col)
+            if color != "":
+                BoardPoint.objects.create(board=board, row=row, col=col, color=color)
 
         return JsonResponse({'status': 'success'})
 
@@ -115,10 +123,23 @@ def edit_board(request, pk):
             
     board_points_list = board.points.all()
     board_points = [model_to_dict(point) for point in board_points_list]
+
+    colors = set()
+    for point in board_points:
+        colors.add(point['color'])
+    colors = list(colors)
+    # colors.remove("")
+    colors.append("#FF0000")
+    colors.append("#00FF00")
+    colors.append("#0000FF")
+    colors.append("#FF00FF")
+    colors.append("#FFFF00")
+    colors.append("#00FFFF")
     context = {
         "board": model_to_dict(board),
         "poly_points": poly_points,
         "board_points": board_points,
+        "colors": colors,
     }
     return render(request, 'pathgame/board_edit.html', context)
 

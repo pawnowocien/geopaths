@@ -17,6 +17,23 @@
 {{ board_points|json_script:"board-points" }}
 
 
+
+<div class="w-4/5 p-4 bg-black flex flex-col border-2">
+    <div class="w-full p-2 text-center text-xl font-bold">
+        Added color
+    </div>
+    <div class="flex flex-row flex-wrap p-2 gap-4 items-center justify-center">
+        <div class="color rounded-full h-12 border-1 p-2" color="">
+            <div class="rounded-full h-full w-20" style="background-color: {{ color }};"></div>
+        </div>
+        {% for color in colors %}
+            <div class="color rounded-full h-12 border-1 p-2" color={{ color }}>
+                <div class="rounded-full h-full w-20" style="background-color: {{ color }};"></div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 <div
     id="board-config"
     data-width="{{ board.width }}"
