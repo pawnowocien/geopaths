@@ -28,6 +28,19 @@ class SubBoard(models.Model):
     def __str__(self):
         return f"SubBoard {self.id} of {self.board.owner}"
 
+class BoardPoint(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='points')
+    row = models.PositiveIntegerField()
+    col = models.PositiveIntegerField()
+    color = models.CharField(max_length=7, default="#FFFFFF")  # Hex color code
+    
+    class Meta:
+        unique_together = ('board', 'row', 'col')
+
+    def __str__(self):
+        return f"Point ({self.row}, {self.col})"
+
+
 class Path(models.Model):
     board = models.ForeignKey(SubBoard, on_delete=models.CASCADE)
     color = models.CharField(max_length=7, default="#000000")  # Hex color code

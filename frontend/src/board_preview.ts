@@ -12,8 +12,7 @@ if (sliderWidth && sliderHeight && selectShape && gridElement) {
             parseInt(sliderWidth.value),
             parseInt(sliderHeight.value),
             parseInt((selectShape as HTMLSelectElement).value),
-            gridElement,
-            SVGPolygon
+            gridElement
         );
     };
 

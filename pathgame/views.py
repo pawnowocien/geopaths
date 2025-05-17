@@ -3,13 +3,14 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import PermissionDenied
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-from .models import Board, User
+from .models import Board, User, BoardPoint
 
 
 def index(request):
@@ -71,8 +72,37 @@ def board_save(request):
             messages.error(request, "Invalid form submission.")
             return redirect('pathgame:board_creator')
 
-    return redirect('pathgame:board_creator')  # fallback for non-POST requests
+    return redirect('pathgame:board_creator')
 
+
+@csrf_exempt
+@login_required
+def update_board_cell(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid method'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        row = int(data.get('row'))
+        col = int(data.get('col'))
+        board_id = int(data.get('board'))
+
+        if row is None or col is None or board_id is None:
+            return JsonResponse({'error': 'Missing data'}, status=400)
+        
+        board = Board.objects.get(pk=board_id, creator=request.user)
+        if BoardPoint.objects.filter(board=board, row=row, col=col).exists():
+            BoardPoint.objects.filter(board=board, row=row, col=col).delete()
+        else:
+            BoardPoint.objects.create(board=board, row=row, col=col)
+
+        return JsonResponse({'status': 'success'})
+
+    except Board.DoesNotExist:
+        return JsonResponse({'error': 'Board not found or permission denied'}, status=403)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required
@@ -82,9 +112,13 @@ def edit_board(request, pk):
     for y in range(board.height + 1):
         for x in range(board.width + 1):
             poly_points.append((100 * x / board.width, 100 * y / board.height))
+            
+    board_points_list = board.points.all()
+    board_points = [model_to_dict(point) for point in board_points_list]
     context = {
-        "board": board,
+        "board": model_to_dict(board),
         "poly_points": poly_points,
+        "board_points": board_points,
     }
     return render(request, 'pathgame/board_edit.html', context)
 

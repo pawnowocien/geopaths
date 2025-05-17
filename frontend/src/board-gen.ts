@@ -1,13 +1,26 @@
 import { PolygonConstructor } from "./svg-polygon.js"; // Import the SVGPolygon class
 import { SVGPolygon } from "./svg-polygon.js"; // Import the SVGPolygon class
+import { SVGPolygonExtended } from "./svg-polygon-ext.js"; // Import the SVGPolygon class
+import { BoardPoint } from "./data-models.js";
 
-export function generateBoardSVG(
-    width: number,
-    height: number,
-    sides: number,
-    gridElement: SVGSVGElement,
-    PolygonClass: PolygonConstructor
+
+export function generateBoardSVG(width: number, height: number, sides: number, gridElement: SVGSVGElement, 
+                                boardId?: number, boardPoints?: BoardPoint[] | null
+
 ): void {
+    function newPolygon(x: number, y: number, radius: number, sides: number, row: number, col: number, rotation: number = 0) : SVGPolygon {
+        if (boardId !== undefined) {
+            for (const point of boardPoints || []) {
+                if (point.row === row && point.col === col) {
+                    return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "#000000");
+                }
+            }
+            return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "");
+        } else {
+            return new SVGPolygon(x, y, radius, sides, row, col, rotation);
+        }
+    }
+
     gridElement.innerHTML = ''; // Clear previous SVG elements
 
     const cols = width;
@@ -38,10 +51,10 @@ export function generateBoardSVG(
                     let y = rad / 2 + space_between + row * (3 * rad / 2 + 2 * space_between);
 
                     if ((row + col) % 2 === 0) {
-                        shape = new PolygonClass(x, y, rad, sides, row, col, Math.PI);
+                        shape = newPolygon(x, y, rad, sides, row, col, Math.PI);
                     } else {
                         y += rad / 2 + space_between;
-                        shape = new PolygonClass(x, y, rad, sides, row, col);
+                        shape = newPolygon(x, y, rad, sides, row, col);
                     }
                     gridElement.appendChild(shape.draw());
                 }
@@ -61,7 +74,7 @@ export function generateBoardSVG(
                 for (let col = 0; col < cols; col++) {
                     const x = a / 2 + spacing * col + space_between;
                     const y = a / 2 + spacing * row + space_between;
-                    const shape = new PolygonClass(x, y, rad, sides, row, col);
+                    const shape = newPolygon(x, y, rad, sides, row, col);
                     gridElement.appendChild(shape.draw());
                 }
             }
@@ -80,9 +93,9 @@ export function generateBoardSVG(
 
                     let shape: SVGPolygon;
                     if (row % 2 === 0) {
-                        shape = new PolygonClass(x, y, rad, sides, row, col, Math.PI / 2);
+                        shape = newPolygon(x, y, rad, sides, row, col, Math.PI / 2);
                     } else {
-                        shape = new PolygonClass(x + s_r + space_between / 2, y, rad, sides, row, col, Math.PI / 2);
+                        shape = newPolygon(x + s_r + space_between / 2, y, rad, sides, row, col, Math.PI / 2);
                     }
                     gridElement.appendChild(shape.draw());
                 }

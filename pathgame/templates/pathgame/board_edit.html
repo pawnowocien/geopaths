@@ -13,29 +13,21 @@
     <p>{{ board.updated_at }}</p>
 </div>
 
+{{ board|json_script:"board-data" }}
+{{ board_points|json_script:"board-points" }}
 
 
-{% comment %} <div class="relative w-[500px] h-[500px] border border-gray-400 bg-gray-100">
-
-    {% for point in poly_points %}
-        <div class="absolute w-2 h-2 bg-red-500 rounded-full"
-             style="left: {{ point.0 }}%; top: {{ point.1 }}%;">
-        </div>
-    {% endfor %}
-
-</div> {% endcomment %}
 <div
     id="board-config"
     data-width="{{ board.width }}"
     data-height="{{ board.height }}"
     data-shape="{{ board.type }}"
+    data-board-id="{{ board.id }}"
     class="hidden"
 ></div>
 
 
 <svg id="grid" width="500" height="500" class="bg-gray-800 select-none"></svg>
-
-{% comment %} <svg id="svg" width="500" height="500" class="absolute top-0 left-0"></svg> {% endcomment %}
 
 <script type="module" src="{% static 'js/dist/board-edit.js' %}"></script>
 

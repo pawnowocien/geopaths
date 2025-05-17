@@ -1,17 +1,28 @@
 import { generateBoardSVG } from "./board-gen.js";
-import { SVGPolygonExtended } from "./svg-polygon-ext.js";
 const gridElement = document.querySelector('#grid');
-const boardConfig = document.getElementById('board-config');
-if (boardConfig && gridElement) {
-    const width = parseInt(boardConfig.getAttribute('data-width'));
-    const height = parseInt(boardConfig.getAttribute('data-height'));
-    const shape = parseInt(boardConfig.getAttribute('data-shape'));
-    console.log('Width:', width);
-    console.log('Height:', height);
-    console.log('Shape:', shape);
-    generateBoardSVG(width, height, shape, gridElement, SVGPolygonExtended);
+const scriptTag1 = document.getElementById('board-data');
+const scriptTag2 = document.getElementById('board-points');
+if (scriptTag1 && scriptTag1.textContent && scriptTag2 && scriptTag2.textContent && gridElement) {
+    const boardData = JSON.parse(scriptTag1.textContent);
+    const boardPoints = JSON.parse(scriptTag2.textContent);
+    console.log(boardData);
+    console.log(boardPoints);
+    console.log('Width:', boardData.width);
+    console.log('Height:', boardData.height);
+    console.log('Shape:', boardData.type);
+    let points = [];
+    ;
+    for (const point of boardPoints) {
+        points.push({
+            row: point.row,
+            col: point.col,
+            id: point.id,
+            color: point.color,
+        });
+    }
+    generateBoardSVG(boardData.width, boardData.height, boardData.type, gridElement, boardData.id, points);
 }
 else {
-    console.error('Board config or SVG grid not found.');
+    console.error('Board data script tag not found or empty');
 }
 //# sourceMappingURL=board-edit.js.map
