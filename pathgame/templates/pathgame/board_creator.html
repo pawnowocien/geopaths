@@ -5,81 +5,36 @@
 
 {% block content %}
 
-{% comment %} <div class="p-4 space-y-4 w-1/2 mx-auto bg-black border-2">
+    <form method="POST" draggable="false" action="{% url 'pathgame:board_save' %}" class="select-none">
+        {% csrf_token %}
+        <label for="sliderWidth">Width:</label>
+        <input type="range" id="sliderWidth" name="width" min="2" max="30" value="10">
+        <span id="sliderWidthValue">10</span> px
+        <br>
 
-    <div class="flex flex-row w-max items-center">
-        <label for="slider-a" class="w-40">Wartość A:</label>
-        <input type="range" id="slider-a" min="1" max="10" value="1" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-black inset-ring-1">
-        <input type="number" id="input-a" min="1" max="10" value="1" class="border p-1 w-16 ml-2">
-    </div>
+        <label for="sliderHeight">Height:</label>
+        <input type="range" id="sliderHeight" name="height" min="2" max="30" value="10">
+        <span id="sliderHeightValue">10</span> px
+        <br>
 
-    <div class="flex flex-row w-max items-center">
-        <label for="slider-b" class="w-40">Wartość B:</label>
-        <input type="range" id="slider-b" min="1" max="10" value="1" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-black inset-ring-1">
-        <input type="number" id="input-b" min="1" max="10" value="1" class="border p-1 w-16 ml-2">
-    </div>
+        <div>
+            <label for="select_shape">Shape:</label>
+            <select id="select_shape" name="type" class="border p-1 bg-black" >
+                <option value="3">Triangles</option>
+                <option value="4">Squares</option>
+                <option value="6" selected="selected">Hexagons</option>
+            </select>
+        </div>
+        
+        <label for="board_name">Board Name:</label>
+        <input type="text" name="name" id="board_name" value="Untitled" class="border p-1">
+        <br>
+        <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer">Continue to Dots</button>
+        <br>
+    </form>
 
-    <div>
-        <label for="select-c">Shape:</label>
-        <select id="select-c" class="border p-1 bg-black" >
-            <option value="3">Triangles</option>
-            <option value="4" selected="selected">Squares</option>
-            <option value="6">Hexagons</option>
-        </select>
-    </div>
+    <svg id="grid" width="500" height="500"></svg>
 
-    <div class="mt-4 font-bold">
-        Wynik: <span id="result">3</span>
-    </div>
-
-</div> {% endcomment %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVG Grid Generator</title>
-    <style>
-        svg {
-            border: 1px solid #000;
-        }
-    </style>
-</head>
-<body>
-
-    <label for="sliderWidth">Width:</label>
-    <input type="range" id="sliderWidth" min="1" max="20" value="10">
-    <span id="sliderWidthValue">10</span> px
-    <br>
-
-    <label for="sliderHeight">Height:</label>
-    <input type="range" id="sliderHeight" min="1" max="20" value="10">
-    <span id="sliderHeightValue">10</span> px
-    <br>
-
-    <div>
-        <label for="select_shape">Shape:</label>
-        <select id="select_shape" class="border p-1 bg-black" >
-            <option value="triangle">Triangles</option>
-            <option value="square">Squares</option>
-            <option value="hexagon" selected="selected">Hexagons</option>
-        </select>
-    </div>
-
-    <br>
-
-
-
-    <canvas id="canvas" width="600" height="600" class="bg-gray-800"></canvas>
-
-    <svg id="grid" width="800" height="800"></svg>
-
-    <script src="app.js"></script>
-</body>
-</html>
-
-
-<script src="{% static 'js/dist/main.js' %}"></script>
+    <script type="module" src="{% static 'js/dist/board_preview.js' %}"></script>
 
 {% endblock %}

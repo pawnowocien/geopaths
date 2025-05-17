@@ -3,10 +3,14 @@
     "target": "ES6",
     "lib": ["es2016", "dom"],
     "module": "ES6",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "outDir": "../static/js/dist",
     "rootDir": "./src",
-    "sourceMap": true,
-    "strict": true,
+    "sourceMap": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

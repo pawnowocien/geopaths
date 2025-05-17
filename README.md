@@ -17,3 +17,6 @@
   ```
 
   in the same directory, concurrently.
+
+
+Reminder: webpack installed (in frontend).

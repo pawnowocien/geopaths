@@ -20,9 +20,16 @@ class Board(models.Model):
     def __str__(self):
         return self.name
 
+class SubBoard(models.Model):
+    name = models.CharField(max_length=50)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='subboards')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subboards')
+
+    def __str__(self):
+        return f"SubBoard {self.id} of {self.board.owner}"
 
 class Path(models.Model):
-    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    board = models.ForeignKey(SubBoard, on_delete=models.CASCADE)
     color = models.CharField(max_length=7, default="#000000")  # Hex color code
 
     def __str__(self):

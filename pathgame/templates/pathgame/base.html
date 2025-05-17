@@ -49,7 +49,7 @@
                         <p class="font-medium {% if user.is_superuser %}text-red-700{% endif %}">{{ user.username }}</p>
                     </div>
                     <a href="{% url 'pathgame:user_page' user.id %}" class="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2">
-                        <span>My paths</span>
+                        <span>My page</span>
                     </a>
                     <form method="post" action="{% url 'pathgame:logout' %}">
                         {% csrf_token %}
