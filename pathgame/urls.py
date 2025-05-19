@@ -14,7 +14,8 @@ urlpatterns = [
     
     path("subboard_editor/<int:pk>", views.subboard_editor, name="subboard_editor"),
     path("update_subboard_name/<int:pk>", views.update_subboard_name, name="update_subboard_name"),
-
+    path("create_path", views.create_path, name="create_path"),
+    path("delete_path", views.delete_path, name="delete_path"),
     
     path("board_save", views.board_save, name="board_save"),
     path("subboard_create", views.subboard_create, name="subboard_create"),

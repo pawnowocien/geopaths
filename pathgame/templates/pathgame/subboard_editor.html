@@ -28,7 +28,8 @@
 
 {{ board|json_script:"board-data" }}
 {{ board_points|json_script:"board-points" }}
-
+{{ subboard|json_script:"subboard-data" }}
+{{ paths|json_script:"paths-data" }}
 <svg id="grid" width="800" height="700" class="bg-gray-800 select-none"></svg>
 
 <script type="module" src="{% static 'js/dist/subboard-editor.js' %}"></script>

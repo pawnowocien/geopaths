@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-from .models import Board, User, BoardPoint, SubBoard
+from .models import Board, User, BoardPoint, SubBoard, Path, PathPoint
 
 
 def index(request):
@@ -224,12 +224,23 @@ def subboard_editor(request, pk):
         colors.add(point['color'])
     colors = list(colors)
     
+    paths = []
+    for path_obj in subboard.paths.all():
+        path = {
+            'color': path_obj.color,
+            'points': []
+        }
+        for point in path_obj.points.order_by('order'):
+            path['points'].append((point.row, point.col))
+        paths.append(path)
+    
     context = {
-        'subboard': subboard,
+        'subboard': model_to_dict(subboard),
         'board': model_to_dict(subboard.board),
         "poly_points": poly_points,
         "board_points": board_points,
         "colors": colors,
+        "paths": paths,
     }
     return render(request, 'pathgame/subboard_editor.html', context)
 
@@ -248,18 +259,74 @@ def update_subboard_name(request, pk):
 
 
 
+@csrf_exempt
+@login_required
+def create_path(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid method'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        path_got = data.get('path')
+        subboard_id = int(data.get('subboard'))
+        subboard = get_object_or_404(SubBoard, id=subboard_id, owner=request.user)
+        
+        board_id = subboard.board.pk
+        board_point = BoardPoint.objects.filter(board=board_id, row=int(path_got[0]['row']), col=int(path_got[0]['col'])).first()
+        color = board_point.color
+        
+        path_obj = Path.objects.create(
+            board = subboard,
+            color = color,
+        )
+        for id, point in enumerate(path_got):
+            row, col = int(point['row']), int(point['col'])
+            PathPoint.objects.create(
+                path = path_obj,
+                row = row,
+                col = col,
+                order = id + 1,
+            )
+            
+    # BoardPoint.objects.filter(board=board, row=row, col=col).exists():
+        return JsonResponse({'status': 'success'})
+
+    except Board.DoesNotExist:
+        return JsonResponse({'error': 'Board not found or permission denied'}, status=403)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
+@csrf_exempt
+@login_required
+def delete_path(request):
+    if request.method != 'DELETE':
+        return JsonResponse({'error': 'Invalid method'}, status=405)
 
+    try:
+        data = json.loads(request.body)
+        start = data.get('start')
+        end = data.get('end')
+        subboard_id = data.get('subboard')
+        subboard = get_object_or_404(SubBoard, id=subboard_id, owner=request.user)
+        
+        print("1:", start, end, subboard.pk)
+        
+        start_point = PathPoint.objects.get(path__board=subboard_id, row=start[0], col=start[1])
+        
+        print("2:", start_point.pk)
+        path = start_point.path
+        
+        print("3:", path.pk)
+        path.delete()
+        return JsonResponse({'status': 'success'})
 
+    except Board.DoesNotExist:
+        return JsonResponse({'error': 'Board not found or permission denied'}, status=403)
 
-
-
-
-
-
-
-
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 

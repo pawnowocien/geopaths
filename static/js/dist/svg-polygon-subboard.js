@@ -1,6 +1,5 @@
 import { SVGPolygon } from "./svg-polygon.js";
-import { getPaintColor, setCurrentTile, getLastTile, setPaintColor, setCurrentCoords } from "./color-state.js";
-import { getColor, isStatic, drawLine, setCoords } from "./board-state.js";
+import { getColor, isStatic, setCoords, handleClick } from "./board-state.js";
 export class SVGPolygonSubboard extends SVGPolygon {
     constructor(x, y, radius, sides, row, col, rotation, board) {
         super(x, y, radius, sides, row, col, rotation);
@@ -10,38 +9,6 @@ export class SVGPolygonSubboard extends SVGPolygon {
     }
     polyStatic() {
         return isStatic(this.row, this.col);
-    }
-    isNeigh(row, col) {
-        switch (this.sides) {
-            case 3:
-                if (Math.abs(col - this.col) === 1 && row == this.row)
-                    return true;
-                if (col == this.col) {
-                    if ((this.row + this.col) % 2 === 0 && row === this.row - 1)
-                        return true;
-                    if ((this.row + this.col) % 2 === 1 && row === this.row + 1)
-                        return true;
-                }
-                return false;
-            case 4:
-                return (Math.abs(row - this.row) + Math.abs(col - this.col) === 1);
-            case 6:
-                if (row === this.row && Math.abs(col - this.col) === 1)
-                    return true;
-                if (Math.abs(row - this.row) === 1) {
-                    if (this.row % 2 === 0) {
-                        if (col === this.col - 1 || col === this.col)
-                            return true;
-                    }
-                    else {
-                        if (col === this.col || col === this.col + 1)
-                            return true;
-                    }
-                }
-                return false;
-            default:
-                return false;
-        }
     }
     draw() {
         const xmlns = 'http://www.w3.org/2000/svg';
@@ -90,20 +57,7 @@ export class SVGPolygonSubboard extends SVGPolygon {
             circle.style.display = 'block';
         }
         group.addEventListener('click', () => {
-            if (getPaintColor() !== "" && this.isNeigh(...getLastTile()) && this.point_color === "") {
-                circle.setAttribute('fill', getPaintColor());
-                circle.setAttribute('opacity', '1.0');
-                circle.style.display = 'block';
-                this.point_color = getPaintColor();
-                let [row, col] = getLastTile();
-                setCurrentTile(this.row, this.col);
-                drawLine(row, col, this.row, this.col, radius * 2);
-            }
-            if (this.polyStatic()) {
-                setCurrentTile(this.row, this.col);
-                setCurrentCoords(this.x, this.y);
-                setPaintColor(this.point_color);
-            }
+            handleClick(this.row, this.col);
         });
         group.appendChild(polygon);
         group.appendChild(circle);

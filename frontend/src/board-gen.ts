@@ -3,7 +3,7 @@ import { SVGPolygonExtended } from "./svg-polygon-ext.js";
 import { BoardPoint } from "./data-models.js";
 import { SVGPolygonStatic } from "./svg-polygon-static.js"
 import { SVGPolygonSubboard } from "./svg-polygon-subboard.js"
-import { setOverlay } from "./board-state.js"
+import { setOverlay, setSides, setRad } from "./board-state.js"
 
 export function generateBoardSVG(width: number, height: number, sides: number, gridElement: SVGSVGElement, 
                                 boardId?: number): void {
@@ -23,6 +23,7 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
 
     gridElement.innerHTML = ''; // Clear previous SVG elements
     
+    setSides(sides)
 
     const cols = width;
     const rows = height;
@@ -31,7 +32,7 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
     const svgHeight = gridElement.clientHeight;
 
     let space_between = 1;
-    let rad = 40;
+    let rad = -1;
 
     let a;
     let max_w = 0;
@@ -105,6 +106,8 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
         default:
             break;
     }
+    setRad(rad)
+    console.log(rad)
 
     if (boardId === -2) {
         const lines = document.createElementNS("http://www.w3.org/2000/svg", "g");
