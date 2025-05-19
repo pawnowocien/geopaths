@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-from .models import Board, User, BoardPoint
+from .models import Board, User, BoardPoint, SubBoard
 
 
 def index(request):
@@ -114,7 +114,7 @@ def update_board_cell(request):
 
 
 @login_required
-def edit_board(request, pk):
+def board_edit(request, pk):
     board = get_object_or_404(Board, pk=pk, creator=request.user)
     poly_points = []
     for y in range(board.height + 1):
@@ -142,6 +142,132 @@ def edit_board(request, pk):
         "colors": colors,
     }
     return render(request, 'pathgame/board_edit.html', context)
+
+
+
+
+
+@login_required
+def board_list(request):
+    boards = Board.objects.all()
+    context = {
+        'boards': boards
+    }
+    return render(request, 'pathgame/board_list.html', context)
+
+
+
+@login_required
+def board_preview(request, pk):
+    board = get_object_or_404(Board, pk=pk)
+    poly_points = []
+    for y in range(board.height + 1):
+        for x in range(board.width + 1):
+            poly_points.append((100 * x / board.width, 100 * y / board.height))
+            
+    board_points_list = board.points.all()
+    board_points = [model_to_dict(point) for point in board_points_list]
+
+    colors = set()
+    for point in board_points:
+        colors.add(point['color'])
+    colors = list(colors)
+    context = {
+        "board": model_to_dict(board),
+        "poly_points": poly_points,
+        "board_points": board_points,
+        "colors": colors,
+    }
+    return render(request, 'pathgame/board_preview.html', context)
+
+
+@csrf_exempt
+@login_required
+def subboard_create(request):
+    if request.method == 'POST':
+        try:
+            board_id = request.POST.get('board_id')
+            print(board_id)
+            subboard = SubBoard.objects.create(
+                name="Untitled",
+                board=Board.objects.get(pk=board_id),
+                owner=request.user
+            )
+            
+            messages.success(request, "SubBoard created successfully!")
+            return redirect('pathgame:subboard_editor', pk=subboard.pk)
+
+        except (ValueError, TypeError):
+            messages.error(request, "Invalid form submission.")
+            return redirect('pathgame:board_list')
+
+    return redirect('pathgame:board_list')
+
+
+
+@login_required
+def subboard_editor(request, pk):
+    subboard = get_object_or_404(SubBoard, pk=pk, owner=request.user)
+    
+    board = subboard.board
+    
+    poly_points = []
+    for y in range(board.height + 1):
+        for x in range(board.width + 1):
+            poly_points.append((100 * x / board.width, 100 * y / board.height))
+            
+    board_points_list = board.points.all()
+    board_points = [model_to_dict(point) for point in board_points_list]
+
+    colors = set()
+    for point in board_points:
+        colors.add(point['color'])
+    colors = list(colors)
+    
+    context = {
+        'subboard': subboard,
+        'board': model_to_dict(subboard.board),
+        "poly_points": poly_points,
+        "board_points": board_points,
+        "colors": colors,
+    }
+    return render(request, 'pathgame/subboard_editor.html', context)
+
+
+
+
+@login_required
+def update_subboard_name(request, pk):
+    subboard = get_object_or_404(SubBoard, id=pk, owner=request.user)
+    if request.method == 'POST':
+        new_name = request.POST.get('name', '').strip()
+        if new_name:
+            subboard.name = new_name
+            subboard.save()
+    return redirect('pathgame:subboard_editor', pk=subboard.pk)  # adjust this redirect
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

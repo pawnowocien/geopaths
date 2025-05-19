@@ -1,7 +1,7 @@
 {% extends 'pathgame/base.html' %}
 {% load static %}
 
-{% block title %}Board Creator{% endblock %}
+{% block title %}Board Preview{% endblock %}
 
 {% block content %}
 
@@ -18,22 +18,25 @@
 
 <div class="w-4/5 p-4 bg-black flex flex-col border-2">
     <div class="w-full p-2 text-center text-xl font-bold">
-        Added color
+        Used colors
     </div>
     <div class="flex flex-row flex-wrap p-2 gap-4 items-center justify-center">
-        <div class="color h-12 border-3 border-blue-300 border-double p-1 hover:cursor-pointer" color="">
-            <div class="h-full font-extrabold aspect-square text-center text-2xl select-none" style="background-color: {{ color }};">X</div>
-        </div>
         {% for color in colors %}
-            <div class="color h-12 border-3 border-black border-double p-3 hover:cursor-pointer" color={{ color }}>
+            <div class="color h-12 border-3 border-double p-3" color={{ color }}>
                 <div class="h-full w-20" style="background-color: {{ color }};"></div>
             </div>
         {% endfor %}
     </div>
 </div>
 
+    <form method="POST" draggable="false" action="{% url 'pathgame:subboard_create' %}" class="select-none">
+        {% csrf_token %}
+        <input type="hidden" name="board_id" value="{{ board.id }}">
+        <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer">Create a subboard</button>
+    </form>
+
 <svg id="grid" width="500" height="500" class="bg-gray-800 select-none"></svg>
 
-<script type="module" src="{% static 'js/dist/board-edit.js' %}"></script>
+<script type="module" src="{% static 'js/dist/board-preview.js' %}"></script>
 
 {% endblock %}

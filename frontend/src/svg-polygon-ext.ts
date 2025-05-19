@@ -1,6 +1,7 @@
 import { SVGPolygon } from "./svg-polygon.js";
 import { getCSRFToken } from "./csrf.js";
-import { getColor, setColor } from "./color-state.js";
+import { getPaintColor } from "./color-state.js";
+import { getColor } from "./board-state.js";
 
 export class SVGPolygonExtended extends SVGPolygon {
     board: number
@@ -15,21 +16,48 @@ export class SVGPolygonExtended extends SVGPolygon {
         col: number,
         rotation: number,
         board: number,
-        point_color: string = ""
     ) {
         super(x, y, radius, sides, row, col, rotation);
         this.board = board;
-        this.point_color = point_color;
+        this.point_color = getColor(row, col);
     }
 
     draw(): SVGGElement {
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const xmlns = 'http://www.w3.org/2000/svg';
+
+        const radius = this.radius * 0.5;
+
+        const group = document.createElementNS(xmlns, 'g');
         const polygon = super.draw();
 
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const darkRed = '#420D09'
+        const width = String(radius / 4)
+
+        const circle = document.createElementNS(xmlns, 'circle');
         circle.setAttribute('cx', this.x.toString());
         circle.setAttribute('cy', this.y.toString());
-        circle.setAttribute('r', (this.radius * 0.5).toString());
+        circle.setAttribute('r', (radius).toString());
+
+
+
+        const line1 = document.createElementNS(xmlns, 'line');
+        line1.setAttribute('x1', (this.x - radius * 0.5).toString());
+        line1.setAttribute('y1', (this.y - radius * 0.5).toString());
+        line1.setAttribute('x2', (this.x + radius * 0.5).toString());
+        line1.setAttribute('y2', (this.y + radius * 0.5).toString());
+        line1.setAttribute('stroke', darkRed);
+        line1.setAttribute('stroke-width', width);
+
+        const line2 = document.createElementNS(xmlns, 'line');
+        line2.setAttribute('x1', (this.x + radius * 0.5).toString());
+        line2.setAttribute('y1', (this.y - radius * 0.5).toString());
+        line2.setAttribute('x2', (this.x - radius * 0.5).toString());
+        line2.setAttribute('y2', (this.y + radius * 0.5).toString());
+        line2.setAttribute('stroke', darkRed);
+        line2.setAttribute('stroke-width', width);
+
+        line1.style.display = 'none';
+        line2.style.display = 'none';
 
 
         function set_hover_color() {
@@ -52,37 +80,52 @@ export class SVGPolygonExtended extends SVGPolygon {
 
         
         group.addEventListener('mouseenter', () => {
-            if (getColor() !== "") {
-                circle.setAttribute('fill', getColor());
-                circle.setAttribute('opacity', '0.5');
-                circle.style.display = 'block';
-            } else if (this.point_color !== "") {
-                circle.setAttribute('fill', 'red');
-                circle.setAttribute('opacity', '0.8');
-                circle.style.display = 'block';
-            } else {
-                circle.style.display = 'none';
+            // New circle / replace a different color circle
+            if (getPaintColor() !== "") {
+                if (this.point_color !== getPaintColor()) {      
+                    group.style.cursor = 'pointer';
+                    circle.setAttribute('fill', getPaintColor());
+                    circle.setAttribute('opacity', '0.5');
+                    circle.style.display = 'block';
+                }
+            } // Eraser
+            else {
+                if (this.point_color !== "") {   
+                    group.style.cursor = 'pointer';
+                    circle.setAttribute('opacity', '0.3');
+                    line1.style.display = 'block';
+                    line2.style.display = 'block';
+                }
             }
         });
         group.addEventListener('mouseleave', () => {
             if (this.point_color === "") {
+                group.style.cursor = 'default';
                 circle.style.display = 'none';
             } else {
+                group.style.cursor = 'default';
                 circle.setAttribute('fill', this.point_color);
                 circle.setAttribute('opacity', '1');
                 circle.style.display = 'block';
             }
+            line1.style.display = 'none';
+            line2.style.display = 'none';
         });
 
 
 
         group.addEventListener('click', () => {
 
-            this.point_color = getColor();
-            if (getColor() === "") {
+            this.point_color = getPaintColor();
+            if (getPaintColor() === "") {
                 circle.style.display = 'none';
+                line1.style.display = 'none';
+                line2.style.display = 'none';
+                group.style.cursor = 'default';
             } else {
+                circle.setAttribute('opacity', '1');
                 circle.style.display = 'block';
+                group.style.cursor = 'default';
             }
 
 
@@ -90,7 +133,7 @@ export class SVGPolygonExtended extends SVGPolygon {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken() // Make sure CSRF token is sent
+                    'X-CSRFToken': getCSRFToken()
                 },
                 body: JSON.stringify({
                     row: this.row,
@@ -115,6 +158,8 @@ export class SVGPolygonExtended extends SVGPolygon {
 
         group.appendChild(polygon);
         group.appendChild(circle);
+        group.appendChild(line1);
+        group.appendChild(line2);
 
         return group;
     }

@@ -1,27 +1,28 @@
-import { PolygonConstructor } from "./svg-polygon.js"; // Import the SVGPolygon class
-import { SVGPolygon } from "./svg-polygon.js"; // Import the SVGPolygon class
-import { SVGPolygonExtended } from "./svg-polygon-ext.js"; // Import the SVGPolygon class
+import { SVGPolygon } from "./svg-polygon.js";
+import { SVGPolygonExtended } from "./svg-polygon-ext.js";
 import { BoardPoint } from "./data-models.js";
-
+import { SVGPolygonStatic } from "./svg-polygon-static.js"
+import { SVGPolygonSubboard } from "./svg-polygon-subboard.js"
+import { setOverlay } from "./board-state.js"
 
 export function generateBoardSVG(width: number, height: number, sides: number, gridElement: SVGSVGElement, 
-                                boardId?: number, boardPoints?: BoardPoint[] | null
+                                boardId?: number): void {
 
-): void {
     function newPolygon(x: number, y: number, radius: number, sides: number, row: number, col: number, rotation: number = 0) : SVGPolygon {
-        if (boardId !== undefined) {
-            for (const point of boardPoints || []) {
-                if (point.row === row && point.col === col) {
-                    return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, point.color);
-                }
-            }
-            return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "");
-        } else {
+        if (boardId === undefined) {
+            // setAll();
             return new SVGPolygon(x, y, radius, sides, row, col, rotation);
+        } else if (boardId === -1) {
+            return new SVGPolygonStatic(x, y, radius, sides, row, col, rotation)
+        } else if (boardId === -2) {
+            return new SVGPolygonSubboard(x, y, radius, sides, row, col, rotation, boardId)
+        } else {
+            return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId);
         }
     }
 
     gridElement.innerHTML = ''; // Clear previous SVG elements
+    
 
     const cols = width;
     const rows = height;
@@ -103,5 +104,12 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
             break;
         default:
             break;
+    }
+
+    if (boardId === -2) {
+        const lines = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        // lines.setAttribute("id", "over")
+        gridElement.appendChild(lines);
+        setOverlay(lines)
     }
 }

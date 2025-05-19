@@ -1,0 +1,36 @@
+{% extends 'pathgame/base.html' %}
+{% load static %}
+
+{% block title %}Board Preview{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <p>Board:</p>
+    <p>{{ board.name }} by {{ board.owner.username }}</p>
+    <p>{{ board.width }} x {{ board.height }}</p>
+    <p>{{ board.type }}</p>
+    <p>{{ board.created_at }}</p>
+    <p>{{ board.updated_at }}</p>
+    <br>
+    <p>Subboard:</p>
+    <form method="POST" action="{% url 'pathgame:update_subboard_name' subboard.id %}" class="space-y-2">
+        {% csrf_token %}
+        <label for="subboard-name">Name:</label>
+        <input type="text" id="subboard-name" name="name" value="{{ subboard.name }}" class="px-2 py-1 rounded">
+        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer">
+            Update Name
+        </button>
+        <p class="text-sm text-gray-500">by {{ subboard.owner.username }}</p>
+    </form>
+
+</div>
+
+{{ board|json_script:"board-data" }}
+{{ board_points|json_script:"board-points" }}
+
+<svg id="grid" width="800" height="700" class="bg-gray-800 select-none"></svg>
+
+<script type="module" src="{% static 'js/dist/subboard-editor.js' %}"></script>
+
+{% endblock %}

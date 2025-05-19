@@ -1,0 +1,33 @@
+{% extends 'pathgame/base.html' %}
+
+{% block title %}Board List{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Board List</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for board in boards %}
+        <a href="{% url 'pathgame:board_preview' board.id %}" class="block">
+            <div class="rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300 border-1">
+                <h2 class="text-xl font-semibold">{{ board.name }}</h2>
+                <p class="mt-2"><strong>Size:</strong> {{ board.width }} x {{ board.height }}</p>
+                <p class=""><strong>Type:</strong> 
+                    {% if board.type == 3 %} Triangle
+                    {% elif board.type == 4 %} Square
+                    {% elif board.type == 6 %} Hexagon
+                    {% else %} Unknown
+                    {% endif %}
+                </p>
+                <p class="text-sm text-gray-400 mt-2">Created by <strong>{{ board.creator.username }}</strong></p>
+                <p class="text-xs text-gray-300">Updated {{ board.updated_at|date:"d M Y" }}</p>
+            </div>
+        </a>
+        {% empty %}
+        <div class="col-span-full text-center text-gray-400">
+            No boards available.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

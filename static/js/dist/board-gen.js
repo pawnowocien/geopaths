@@ -1,17 +1,22 @@
-import { SVGPolygon } from "./svg-polygon.js"; // Import the SVGPolygon class
-import { SVGPolygonExtended } from "./svg-polygon-ext.js"; // Import the SVGPolygon class
-export function generateBoardSVG(width, height, sides, gridElement, boardId, boardPoints) {
+import { SVGPolygon } from "./svg-polygon.js";
+import { SVGPolygonExtended } from "./svg-polygon-ext.js";
+import { SVGPolygonStatic } from "./svg-polygon-static.js";
+import { SVGPolygonSubboard } from "./svg-polygon-subboard.js";
+import { setOverlay } from "./board-state.js";
+export function generateBoardSVG(width, height, sides, gridElement, boardId) {
     function newPolygon(x, y, radius, sides, row, col, rotation = 0) {
-        if (boardId !== undefined) {
-            for (const point of boardPoints || []) {
-                if (point.row === row && point.col === col) {
-                    return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, point.color);
-                }
-            }
-            return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId, "");
+        if (boardId === undefined) {
+            // setAll();
+            return new SVGPolygon(x, y, radius, sides, row, col, rotation);
+        }
+        else if (boardId === -1) {
+            return new SVGPolygonStatic(x, y, radius, sides, row, col, rotation);
+        }
+        else if (boardId === -2) {
+            return new SVGPolygonSubboard(x, y, radius, sides, row, col, rotation, boardId);
         }
         else {
-            return new SVGPolygon(x, y, radius, sides, row, col, rotation);
+            return new SVGPolygonExtended(x, y, radius, sides, row, col, rotation, boardId);
         }
     }
     gridElement.innerHTML = ''; // Clear previous SVG elements
@@ -85,6 +90,12 @@ export function generateBoardSVG(width, height, sides, gridElement, boardId, boa
             break;
         default:
             break;
+    }
+    if (boardId === -2) {
+        const lines = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        // lines.setAttribute("id", "over")
+        gridElement.appendChild(lines);
+        setOverlay(lines);
     }
 }
 //# sourceMappingURL=board-gen.js.map
