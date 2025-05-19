@@ -3,24 +3,40 @@
 {% block title %}Main Page{% endblock %}
 
 {% block content %}
-    <div class="max-w-4xl mx-auto p-6 space-y-6 text-center">
-        <h2 class="text-4xl font-semibold">
-            Welcome to the <span class="text-blue-600">Cave Maps</span> Portal
+    <div class="max-w-4xl mx-auto p-6 space-y-8 text-center bg-black/30 rounded-xl shadow-lg">
+        <h2 class="text-4xl font-bold">
+            Welcome to <span class="text-blue-500">GeoPaths</span>
         </h2>
         
-        <p class="text-lg">
-            Explore a world of cave maps and find your way through stunning, mysterious cave systems. Whether you're an adventurer, explorer, or enthusiast, you’ll love the journeys ahead.
-        </p>
+        <div class="text-lg text-gray-400 text-left flex flex-col gap-4"> 
+            <p> This is the sacred lattice. The Grid Eternal. Triangles whisper. Squares throb. Hexagons scream. You do not play — you commune.</p>
+            <p> Each connection redraws the boundaries of reason. Every line defies Euclid. </p>
+            <p> There is no win. There is only the Pattern. </p>
+            <p> Connect. Or be unmade. </p>
+            <p class="text-right "> ChatGPT </p>
+        </div>
 
-
-        <div class="mt-10 text-gray-500">
-            <p class="text-sm flex flex-col gap-6">
+        <div class="mt-10">
+            <p class="text-md flex flex-col gap-6 text-sky-300">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'pathgame:user_page' user.id %}" class="text-blue-500 hover:underline">Check your boards here</a>
-                    <a href="{% url 'pathgame:board_creator' %}" class="text-blue-500 hover:underline">Create a new board</a>
-                    <a href="{% url 'pathgame:board_list' %}" class="text-blue-500 hover:underline">Browse boards</a>
+                    <a href="{% url 'pathgame:user_page' user.id %}" class="group inline-flex items-center justify-center space-x-2 text-blue-400 hover:text-white hover:bg-blue-800 px-4 py-2 rounded-lg border border-blue-500 transition duration-200">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Check your boards here</span>
+                    </a>
+                    <a href="{% url 'pathgame:board_creator' %}" class="group inline-flex items-center justify-center space-x-2 text-blue-400 hover:text-white hover:bg-blue-800 px-4 py-2 rounded-lg border border-blue-500 transition duration-200">
+                        <ion-icon name="create-outline"></ion-icon>
+                        <span>Create a new board</span>
+                    </a>
+                    <a href="{% url 'pathgame:board_list' %}" class="group inline-flex items-center justify-center space-x-2 text-blue-400 hover:text-white hover:bg-blue-800 px-4 py-2 rounded-lg border border-blue-500 transition duration-200">
+                        <ion-icon name="map-outline"></ion-icon>
+                        <span>Browse boards</span>
+                    </a>
                 {% else %}
-                    <span class="text-gray-400">Please log in to track your paths.</span>
+                    <a href="{% url 'pathgame:board_list' %}" class="group inline-flex items-center justify-center space-x-2 text-blue-400 hover:text-white hover:bg-blue-800 px-4 py-2 rounded-lg border border-blue-500 transition duration-200">
+                        <ion-icon name="map-outline"></ion-icon>
+                        <span>Browse boards</span>
+                    </a>
+                    <span class="text-gray-400">Log in for more functionalities.</span>
                 {% endif %}
             </p>
         </div>

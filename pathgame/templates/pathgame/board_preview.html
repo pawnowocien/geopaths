@@ -5,18 +5,16 @@
 
 {% block content %}
 
-<div class="mb-4">
-    <p>{{ board.name }} by {{ board.creator.username }}</p>
+<div class="mb-4 text-4xl">
+    <p class="font-bold">{{ board.name }} <span class="font-normal">by</span> {{ author.username }}</p>
     <p>{{ board.width }} x {{ board.height }}</p>
     <p>{{ board.type }}</p>
-    <p>{{ board.created_at }}</p>
-    <p>{{ board.updated_at }}</p>
 </div>
 
 {{ board|json_script:"board-data" }}
 {{ board_points|json_script:"board-points" }}
 
-<div class="w-4/5 p-4 bg-black flex flex-col border-2">
+{% comment %} <div class="w-4/5 p-4 bg-black flex flex-col border-2">
     <div class="w-full p-2 text-center text-xl font-bold">
         Used colors
     </div>
@@ -27,15 +25,15 @@
             </div>
         {% endfor %}
     </div>
-</div>
+</div> {% endcomment %}
 
-    <form method="POST" draggable="false" action="{% url 'pathgame:subboard_create' %}" class="select-none">
-        {% csrf_token %}
-        <input type="hidden" name="board_id" value="{{ board.id }}">
-        <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer">Create a subboard</button>
-    </form>
+<form method="POST" draggable="false" action="{% url 'pathgame:subboard_create' %}" class="select-none">
+    {% csrf_token %}
+    <input type="hidden" name="board_id" value="{{ board.id }}">
+    <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer">Create a subboard</button>
+</form>
 
-<svg id="grid" width="500" height="500" class="bg-gray-800 select-none"></svg>
+<svg id="grid" width="1200" height="800" class="select-none"></svg>
 
 <script type="module" src="{% static 'js/dist/board-preview.js' %}"></script>
 

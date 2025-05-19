@@ -140,6 +140,7 @@ def board_edit(request, pk):
         "poly_points": poly_points,
         "board_points": board_points,
         "colors": colors,
+        "author": board.creator,
     }
     return render(request, 'pathgame/board_edit.html', context)
 
@@ -147,7 +148,6 @@ def board_edit(request, pk):
 
 
 
-@login_required
 def board_list(request):
     boards = Board.objects.all()
     context = {
@@ -157,7 +157,6 @@ def board_list(request):
 
 
 
-@login_required
 def board_preview(request, pk):
     board = get_object_or_404(Board, pk=pk)
     poly_points = []
@@ -177,6 +176,7 @@ def board_preview(request, pk):
         "poly_points": poly_points,
         "board_points": board_points,
         "colors": colors,
+        "author": board.creator
     }
     return render(request, 'pathgame/board_preview.html', context)
 
@@ -241,6 +241,8 @@ def subboard_editor(request, pk):
         "board_points": board_points,
         "colors": colors,
         "paths": paths,
+        "board_author": board.creator,
+        "subboard_author": subboard.owner
     }
     return render(request, 'pathgame/subboard_editor.html', context)
 

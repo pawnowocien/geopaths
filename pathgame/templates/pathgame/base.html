@@ -10,7 +10,7 @@
     <title>Cave Maps</title>
     {% tailwind_css %}
 </head>
-<body>
+<body class="bg-black">
     {% if messages %}
     <div class="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 space-y-3 p-4 w-80">
         {% for message in messages %}
@@ -81,7 +81,7 @@
         </script>
     </header>
 
-    <main class="max-w-8xl mx-auto bg-navy p-8 space-y-8 flex flex-col items-center text-sky-300">
+    <main class="max-w-8xl mx-auto bg-gradient-to-b from-navy to-black p-8 space-y-8 flex flex-col items-center text-sky-300">
         {% block content %}{% endblock %}
     </main>
 </body>

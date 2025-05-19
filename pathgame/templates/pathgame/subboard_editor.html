@@ -1,17 +1,17 @@
 {% extends 'pathgame/base.html' %}
 {% load static %}
 
-{% block title %}Board Preview{% endblock %}
+{% block title %}Subboard Editor{% endblock %}
 
 {% block content %}
 
 <div class="mb-4">
     <p>Board:</p>
-    <p>{{ board.name }} by {{ board.owner.username }}</p>
-    <p>{{ board.width }} x {{ board.height }}</p>
-    <p>{{ board.type }}</p>
-    <p>{{ board.created_at }}</p>
-    <p>{{ board.updated_at }}</p>
+    <div class="mb-4">
+        <p class="font-bold">{{ board.name }} <span class="font-normal">by</span> {{ board_author.username }}</p>
+        <p>{{ board.width }} x {{ board.height }}</p>
+        <p>{{ board.type }}</p>
+    </div>
     <br>
     <p>Subboard:</p>
     <form method="POST" action="{% url 'pathgame:update_subboard_name' subboard.id %}" class="space-y-2">
@@ -21,7 +21,7 @@
         <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer">
             Update Name
         </button>
-        <p class="text-sm text-gray-500">by {{ subboard.owner.username }}</p>
+        <p class="text-sm text-gray-500">by {{ subboard_author.username }}</p>
     </form>
 
 </div>
@@ -30,7 +30,7 @@
 {{ board_points|json_script:"board-points" }}
 {{ subboard|json_script:"subboard-data" }}
 {{ paths|json_script:"paths-data" }}
-<svg id="grid" width="800" height="700" class="bg-gray-800 select-none"></svg>
+<svg id="grid" width="1000" height="800" class="select-none" oncontextmenu="return false;"></svg>
 
 <script type="module" src="{% static 'js/dist/subboard-editor.js' %}"></script>
 
