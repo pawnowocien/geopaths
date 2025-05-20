@@ -281,7 +281,6 @@ export function createPath(color: string, points: [number, number][]): void {
 
 export function handleClick(row: number, col: number): void {
     if (path_map[row][col]) {
-        // removePath(get_path())
         return;
     }
 
@@ -342,4 +341,8 @@ export function handleClick(row: number, col: number): void {
         // make a line and send it
         return;
     }
+}
+
+export function handleHover(row: number, col: number): void {
+    if (get_path().length > 0) handleClick(row, col);
 }

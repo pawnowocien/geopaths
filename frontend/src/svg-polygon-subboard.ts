@@ -1,6 +1,5 @@
 import { SVGPolygon } from "./svg-polygon.js";
-import { getPaintColor, setCurrentTile, getLastTile, setPaintColor, setCurrentCoords, getLastCoords } from "./color-state.js";
-import { getColor, isStatic, setCoords, handleClick } from "./board-state.js";
+import { getColor, isStatic, setCoords, handleClick, handleHover } from "./board-state.js";
 
 export class SVGPolygonSubboard extends SVGPolygon {
     board: number
@@ -79,6 +78,10 @@ export class SVGPolygonSubboard extends SVGPolygon {
 
         group.addEventListener('click', () => {
             handleClick(this.row, this.col);
+        })
+
+        group.addEventListener('mouseenter', () => {
+            handleHover(this.row, this.col);
         })
 
 

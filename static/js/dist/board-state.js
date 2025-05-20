@@ -222,7 +222,6 @@ export function createPath(color, points) {
 }
 export function handleClick(row, col) {
     if (path_map[row][col]) {
-        // removePath(get_path())
         return;
     }
     // Start of the path
@@ -276,5 +275,9 @@ export function handleClick(row, col) {
         // make a line and send it
         return;
     }
+}
+export function handleHover(row, col) {
+    if (get_path().length > 0)
+        handleClick(row, col);
 }
 //# sourceMappingURL=board-state.js.map
