@@ -91,9 +91,11 @@ def update_board_cell(request):
         if row is None or col is None or board_id is None or color is None:
             return JsonResponse({'error': 'Missing data'}, status=400)
         
-
         
         board = Board.objects.get(pk=board_id, creator=request.user)
+        board.subboards.all().delete()
+        # print(board.subboards.all())
+            # subboard.delete()
 
         if BoardPoint.objects.filter(board=board, row=row, col=col).exists():
             if color == "":
@@ -129,6 +131,8 @@ def board_edit(request, pk):
         colors.add(point['color'])
     colors = list(colors)
     # colors.remove("")
+    colors.clear()  # TODO remove in the future
+    
     colors.append("#FF0000")
     colors.append("#00FF00")
     colors.append("#0000FF")
@@ -144,7 +148,13 @@ def board_edit(request, pk):
     }
     return render(request, 'pathgame/board_edit.html', context)
 
-
+@login_required
+def board_delete(request, pk):
+    board = get_object_or_404(Board, pk=pk, creator=request.user)
+    if request.method == 'POST':
+        board.delete()
+        return redirect('pathgame:user_page', user_id=request.user.id)  # Replace with your user page URL name
+    return redirect('pathgame:user_page', user_id=request.user.id)
 
 
 
@@ -176,7 +186,8 @@ def board_preview(request, pk):
         "poly_points": poly_points,
         "board_points": board_points,
         "colors": colors,
-        "author": board.creator
+        "author": board.creator,
+        "user_is_author": board.creator == request.user
     }
     return render(request, 'pathgame/board_preview.html', context)
 
@@ -187,7 +198,6 @@ def subboard_create(request):
     if request.method == 'POST':
         try:
             board_id = request.POST.get('board_id')
-            print(board_id)
             subboard = SubBoard.objects.create(
                 name="Untitled",
                 board=Board.objects.get(pk=board_id),
@@ -202,6 +212,15 @@ def subboard_create(request):
             return redirect('pathgame:board_list')
 
     return redirect('pathgame:board_list')
+
+@login_required
+def subboard_delete(request, pk):
+    subboard = get_object_or_404(SubBoard, pk=pk, owner=request.user)
+    if request.method == 'POST':
+        subboard.delete()
+        return redirect('pathgame:user_page', user_id=request.user.id)  # Replace with your user page URL name
+    return redirect('pathgame:user_page', user_id=request.user.id)
+
 
 
 
@@ -309,18 +328,15 @@ def delete_path(request):
     try:
         data = json.loads(request.body)
         start = data.get('start')
-        end = data.get('end')
+        # end = data.get('end')
         subboard_id = data.get('subboard')
-        subboard = get_object_or_404(SubBoard, id=subboard_id, owner=request.user)
+        # subboard = get_object_or_404(SubBoard, id=subboard_id, owner=request.user)
         
-        print("1:", start, end, subboard.pk)
         
         start_point = PathPoint.objects.get(path__board=subboard_id, row=start[0], col=start[1])
         
-        print("2:", start_point.pk)
         path = start_point.path
         
-        print("3:", path.pk)
         path.delete()
         return JsonResponse({'status': 'success'})
 

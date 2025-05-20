@@ -1,21 +1,25 @@
 {% extends 'pathgame/base.html' %}
 {% load static %}
 
-{% block title %}Board Creator{% endblock %}
+{% block title %}Board Editor{% endblock %}
 
 {% block content %}
 
-<div class="mb-4 text-4xl">
-    <p class="font-bold">{{ board.name }} <span class="font-normal">by</span> {{ author.username }}</p>
-    <p>{{ board.width }} x {{ board.height }}</p>
-    <p>{{ board.type }}</p>
+<div class="mb-4 text-8xl p-5">
+    <p class="font-bold text-hollow">{{ board.name }}</p>
+    {% comment %} <p>{{ board.width }} x {{ board.height }}</p>
+    <p>{{ board.type }}</p> {% endcomment %}
+    <div class="text-left text-base mt-2">
+        <a href="{% url 'pathgame:board_preview' board.id %}" class="inline-block px-4 py-2 text-xs bg-black text-gray-400 rounded transition hover:underline">
+            Click to see the Preview
+        </a>
+    </div>
 </div>
 
 {{ board|json_script:"board-data" }}
 {{ board_points|json_script:"board-points" }}
 
 <div class="flex flex-row">
-    
     <div class="w-80 bg-black flex flex-col border-2 p-2 gap-4 items-center justify-center">
         <div class="color h-12 w-26 border-3 border-blue-300 border-double p-1 hover:cursor-pointer justify-center flex" color="">
             <div class="h-full w-20 font-extrabold aspect-square text-center text-2xl select-none" style="background-color: {{ color }};">X</div>
@@ -30,6 +34,9 @@
     <svg id="grid" width="1000" height="600" class="select-none"></svg>
 </div>
 
+<p class="text-red-700">
+    <span class="font-bold">Warning:</span> every change on the board will result in deletion of every subboard linked to this board
+</p>
 
 <script type="module" src="{% static 'js/dist/board-edit.js' %}"></script>
 

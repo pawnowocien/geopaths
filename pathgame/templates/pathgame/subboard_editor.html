@@ -5,25 +5,27 @@
 
 {% block content %}
 
-<div class="mb-4">
-    <p>Board:</p>
-    <div class="mb-4">
-        <p class="font-bold">{{ board.name }} <span class="font-normal">by</span> {{ board_author.username }}</p>
-        <p>{{ board.width }} x {{ board.height }}</p>
-        <p>{{ board.type }}</p>
+<div class="w-full flex flex-col items-center">
+    <div class="relative w-9/10 h-20 flex items-center"> 
+        <p class="font-bold absolute text-5xl px-4 text-hollow">Board "{{ board.name }}" <span class="text-2xl">by {{ board_author.username }}</span></p>
     </div>
-    <br>
-    <p>Subboard:</p>
-    <form method="POST" action="{% url 'pathgame:update_subboard_name' subboard.id %}" class="space-y-2">
+    <form method="POST" action="{% url 'pathgame:update_subboard_name' subboard.id %}" class="space-y-2 flex flex-col">
         {% csrf_token %}
-        <label for="subboard-name">Name:</label>
-        <input type="text" id="subboard-name" name="name" value="{{ subboard.name }}" class="px-2 py-1 rounded">
-        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 hover:cursor-pointer">
-            Update Name
-        </button>
-        <p class="text-sm text-gray-500">by {{ subboard_author.username }}</p>
+        <input type="text" id="subboard-name" name="name" value="{{ subboard.name }}" class="w-150 px-2 py-1 rounded text-center text-4xl">
+        <p class="text-sm text-gray-500 self-center">by {{ subboard_author.username }}</p>
     </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("subboard-name");
 
+            function resizeInput() {
+                input.style.width = ((input.value.length + 1) * 1) + "ch";
+            }
+
+            input.addEventListener("input", resizeInput);
+            resizeInput();
+        });
+    </script>
 </div>
 
 {{ board|json_script:"board-data" }}

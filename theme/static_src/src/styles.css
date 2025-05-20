@@ -29,3 +29,12 @@
     --color-dark-lager-dark: #220f02;
     --color-stout-dark: #0f0601;
 }
+
+
+@layer cool-stuff {
+    
+    .text-hollow {
+        text-shadow: 0 0 2px oklch(0.828 0.111 230.318), 0 0 2px oklch(0.828 0.111 230.318), 0 0 2px oklch(0.828 0.111 230.318);
+        color: black;
+    }
+}

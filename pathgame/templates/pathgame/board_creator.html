@@ -19,19 +19,19 @@
 
         <div>
             <label for="select_shape" class="block mb-1">Shape:</label>
-            <select id="select_shape" name="type" class="border p-2 bg-black text-white rounded">
-                <option value="3">Triangles</option>
-                <option value="4">Squares</option>
-                <option value="6" selected="selected">Hexagons</option>
+            <select id="select_shape" name="type" class="border p-2 bg-black text-white rounded hover:cursor-pointer">
+                <option value="3" class="hover:cursor-pointer">Triangles</option>
+                <option value="4" class="hover:cursor-pointer">Squares</option>
+                <option value="6" class="hover:cursor-pointer" selected="selected">Hexagons</option>
             </select>
         </div>
 
         <div>
             <label for="board_name" class="block mb-1">Board Name:</label>
-            <input type="text" name="name" id="board_name" value="Untitled" class="border p-2 rounded w-full">
+            <input type="text" name="name" id="board_name" value="Untitled" class="text-white border p-2 rounded w-full">
         </div>
 
-        <button id="submit_board_btn" type="submit" class ="bg-black border-2 border-black text-white p-2 rounded hover:cursor-pointer">Add points</button>
+        <button id="submit_board_btn" type="submit" class ="bg-black border-black border-1 text-white p-2 rounded hover:cursor-pointer hover:border-white">Start adding points</button>
     </form>
 
     <svg id="grid" width="1000" height="600"></svg>

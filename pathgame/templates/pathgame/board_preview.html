@@ -1,39 +1,40 @@
 {% extends 'pathgame/base.html' %}
 {% load static %}
 
-{% block title %}Board Preview{% endblock %}
+{% block title %}{{ author.username }}'s {{ board.name }}{% endblock %}
 
 {% block content %}
 
-<div class="mb-4 text-4xl">
-    <p class="font-bold">{{ board.name }} <span class="font-normal">by</span> {{ author.username }}</p>
-    <p>{{ board.width }} x {{ board.height }}</p>
-    <p>{{ board.type }}</p>
+<div class="mb-4 text-4xl p-4">
+    <p class=""> 
+        <span class="font-extrabold text-hollow text-9xl"> {{ board.name }} </span>
+        <span class="font-extralight">by</span> 
+        <span class="font-extralight"> {{ author.username }} </span>
+    </p>
+    {% comment %} <p>{{ board.width }} x {{ board.height }}</p>
+    <p>{{ board.type }}</p> {% endcomment %}
 </div>
 
 {{ board|json_script:"board-data" }}
 {{ board_points|json_script:"board-points" }}
 
-{% comment %} <div class="w-4/5 p-4 bg-black flex flex-col border-2">
-    <div class="w-full p-2 text-center text-xl font-bold">
-        Used colors
-    </div>
-    <div class="flex flex-row flex-wrap p-2 gap-4 items-center justify-center">
-        {% for color in colors %}
-            <div class="color h-12 border-3 border-double p-3" color={{ color }}>
-                <div class="h-full w-20" style="background-color: {{ color }};"></div>
-            </div>
-        {% endfor %}
-    </div>
-</div> {% endcomment %}
-
-<form method="POST" draggable="false" action="{% url 'pathgame:subboard_create' %}" class="select-none">
-    {% csrf_token %}
-    <input type="hidden" name="board_id" value="{{ board.id }}">
-    <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer">Create a subboard</button>
-</form>
-
 <svg id="grid" width="1200" height="800" class="select-none"></svg>
+
+{% if user.is_authenticated %}
+    <form method="POST" draggable="false" action="{% url 'pathgame:subboard_create' %}" class="select-none">
+        {% csrf_token %}
+        <input type="hidden" name="board_id" value="{{ board.id }}">
+        <button id="submit_board_btn" type="submit" class ="bg-black border-2 p-2 hover:cursor-pointer w-250 hover:text-white">Create a subboard</button>
+    </form>
+    {% if user_is_author %}
+        <a href="{% url 'pathgame:board_edit' board.id %}" class="inline-block bg-black border-2 p-2 hover:text-white w-250 text-center">
+            Edit this board
+        </a>
+    {% endif %}
+
+{% else %}
+    <p class="text-gray-400">Log in to create a subboard.</p>
+{% endif %}
 
 <script type="module" src="{% static 'js/dist/board-preview.js' %}"></script>
 

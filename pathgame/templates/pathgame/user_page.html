@@ -12,10 +12,14 @@
         {% if boards %}
             <ul class="space-y-2 list-disc list-inside">
                 {% for board in boards %}
-                    <li>
+                    <li class="flex justify-between items-center">
                         <a href="{% url 'pathgame:board_edit' board.id %}" class="text-sky-300 hover:underline">
                             {{ board.name }}
                         </a>
+                        <form action="{% url 'pathgame:board_delete' board.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-400 hover:underline ml-2 text-sm hover:cursor-pointer">Delete</button>
+                        </form>
                     </li>
                 {% endfor %}
             </ul>
@@ -30,10 +34,14 @@
         {% if subboards %}
             <ul class="space-y-2 list-disc list-inside">
                 {% for subboard in subboards %}
-                    <li>
+                    <li class="flex justify-between items-center">
                         <a href="{% url 'pathgame:subboard_editor' subboard.id %}" class="text-sky-300 hover:underline">
                             {{ subboard.name }}
                         </a>
+                        <form action="{% url 'pathgame:subboard_delete' subboard.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-400 hover:underline ml-2 text-sm hover:cursor-pointer">Delete</button>
+                        </form>
                     </li>
                 {% endfor %}
             </ul>
@@ -41,5 +49,6 @@
             <p class="text-gray-400">None</p>
         {% endif %}
     </div>
+
 </div>
 {% endblock %}
