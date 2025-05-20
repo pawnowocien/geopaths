@@ -7,8 +7,6 @@
 
 <div class="mb-4 text-8xl p-5">
     <p class="font-bold text-hollow">{{ board.name }}</p>
-    {% comment %} <p>{{ board.width }} x {{ board.height }}</p>
-    <p>{{ board.type }}</p> {% endcomment %}
     <div class="text-left text-base mt-2">
         <a href="{% url 'pathgame:board_preview' board.id %}" class="inline-block px-4 py-2 text-xs bg-black text-gray-400 rounded transition hover:underline">
             Click to see the Preview
@@ -20,15 +18,25 @@
 {{ board_points|json_script:"board-points" }}
 
 <div class="flex flex-row">
-    <div class="w-80 bg-black flex flex-col border-2 p-2 gap-4 items-center justify-center">
-        <div class="color h-12 w-26 border-3 border-blue-300 border-double p-1 hover:cursor-pointer justify-center flex" color="">
+    <div class="w-80 bg-black border-2 p-2 flex flex-col gap-2">
+        <div class="color h-12 w-full border-3 border-blue-300 border-double p-1 hover:cursor-pointer flex justify-center items-center" color="">
             <div class="h-full w-20 font-extrabold aspect-square text-center text-2xl select-none" style="background-color: {{ color }};">X</div>
         </div>
-        {% for color in colors %}
-            <div class="color h-12 border-3 border-black border-double p-3 hover:cursor-pointer" color={{ color }}>
-                <div class="h-full w-20" style="background-color: {{ color }};"></div>
+
+        <div class="flex-1 overflow-y-auto">
+            <div id="colorGrid" class="grid grid-cols-3 gap-2 pr-1">
+                {% for color in colors %}
+                    <div class="color h-12 border-3 border-black border-double p-3 hover:cursor-pointer flex items-center justify-center" color="{{ color }}">
+                        <div class="h-full w-15" style="background-color: {{ color }};" title="{{ color }}"></div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
+        
+        <div class="w-full text-center mt-2">
+            <input id="colorPicker" type="color" class="cursor-pointer border border-gray-400 rounded" />
+            <button id="addColorButton" class="mt-2 ml-2 px-2 py-1 bg-blue-700 text-white rounded hover:bg-blue-800">Add Color</button>
+        </div>
     </div>
 
     <svg id="grid" width="1000" height="600" class="select-none"></svg>

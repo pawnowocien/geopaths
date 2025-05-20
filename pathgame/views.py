@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 import json
+import pathgame.utils as utils
 
 from .models import Board, User, BoardPoint, SubBoard, Path, PathPoint
 
@@ -129,16 +130,11 @@ def board_edit(request, pk):
     colors = set()
     for point in board_points:
         colors.add(point['color'])
-    colors = list(colors)
-    # colors.remove("")
-    colors.clear()  # TODO remove in the future
+
+    # Add default colors
+    colors.update(["#FF0000", "#00FF00", "#0000FF", "#FF00FF", "#FFFF00", "#00FFFF"])
+    colors = sorted(colors, key=lambda c: utils.hex_to_hsl(c)[0])
     
-    colors.append("#FF0000")
-    colors.append("#00FF00")
-    colors.append("#0000FF")
-    colors.append("#FF00FF")
-    colors.append("#FFFF00")
-    colors.append("#00FFFF")
     context = {
         "board": model_to_dict(board),
         "poly_points": poly_points,
