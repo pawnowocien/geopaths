@@ -89,6 +89,6 @@ if (addColorButton && colorPicker && colorGrid) {
     addColorButton.addEventListener('click', () => {
         const pickedColor = colorPicker.value;
         const newBox = createColorBox(pickedColor);
-        colorGrid.appendChild(newBox); // Instead of inserting into full panel
+        colorGrid.appendChild(newBox);
     });
 }

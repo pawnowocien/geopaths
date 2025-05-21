@@ -32,7 +32,7 @@ class BoardPoint(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='points')
     row = models.PositiveIntegerField()
     col = models.PositiveIntegerField()
-    color = models.CharField(max_length=7, default="#FFFFFF")  # Hex color code
+    color = models.CharField(max_length=7, default="#FFFFFF")
     
     class Meta:
         unique_together = ('board', 'row', 'col')
@@ -43,7 +43,7 @@ class BoardPoint(models.Model):
 
 class Path(models.Model):
     board = models.ForeignKey(SubBoard, on_delete=models.CASCADE, related_name='paths')
-    color = models.CharField(max_length=7, default="#000000")  # Hex color code
+    color = models.CharField(max_length=7, default="#000000")
 
     def __str__(self):
         return f"Path {self.id} from Board {self.board.id}"

@@ -10,7 +10,6 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
 
     function newPolygon(x: number, y: number, radius: number, sides: number, row: number, col: number, rotation: number = 0) : SVGPolygon {
         if (boardId === undefined) {
-            // setAll();
             return new SVGPolygon(x, y, radius, sides, row, col, rotation);
         } else if (boardId === -1) {
             return new SVGPolygonStatic(x, y, radius, sides, row, col, rotation)
@@ -118,7 +117,6 @@ export function generateBoardSVG(width: number, height: number, sides: number, g
 
     if (boardId === -2) {
         const lines = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        // lines.setAttribute("id", "over")
         gridElement.appendChild(lines);
         setOverlay(lines)
     }

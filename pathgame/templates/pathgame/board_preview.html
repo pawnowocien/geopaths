@@ -11,8 +11,6 @@
         <span class="font-extralight">by</span> 
         <span class="font-extralight"> {{ author.username }} </span>
     </p>
-    {% comment %} <p>{{ board.width }} x {{ board.height }}</p>
-    <p>{{ board.type }}</p> {% endcomment %}
 </div>
 
 {{ board|json_script:"board-data" }}

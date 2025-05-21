@@ -338,7 +338,6 @@ export function handleClick(row: number, col: number): void {
 
         reset_path();
         setPaintColor("");
-        // make a line and send it
         return;
     }
 }

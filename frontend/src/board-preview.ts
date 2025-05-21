@@ -1,5 +1,4 @@
 import { generateBoardSVG } from "./board-gen.js";
-import { BoardPoint } from "./data-models.js";
 import { setDim, setColor } from "./board-state.js";
 
 const gridElement = document.querySelector<SVGSVGElement>('#grid');

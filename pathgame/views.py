@@ -50,7 +50,6 @@ def board_save(request):
             height = int(request.POST.get('height', 10))
             shape = int(request.POST.get('type', 'square'))
 
-            # Basic validation
             if not (2 <= width <= 30 and 2 <= height <= 30):
                 messages.error(request, "Width and height must be between 2 and 30.")
                 return redirect('pathgame:board_creator')
@@ -95,8 +94,6 @@ def update_board_cell(request):
         
         board = Board.objects.get(pk=board_id, creator=request.user)
         board.subboards.all().delete()
-        # print(board.subboards.all())
-            # subboard.delete()
 
         if BoardPoint.objects.filter(board=board, row=row, col=col).exists():
             if color == "":
@@ -131,7 +128,6 @@ def board_edit(request, pk):
     for point in board_points:
         colors.add(point['color'])
 
-    # Add default colors
     colors.update(["#FF0000", "#00FF00", "#0000FF", "#FF00FF", "#FFFF00", "#00FFFF"])
     colors = sorted(colors, key=lambda c: utils.hex_to_hsl(c)[0])
     
@@ -149,7 +145,7 @@ def board_delete(request, pk):
     board = get_object_or_404(Board, pk=pk, creator=request.user)
     if request.method == 'POST':
         board.delete()
-        return redirect('pathgame:user_page', user_id=request.user.id)  # Replace with your user page URL name
+        return redirect('pathgame:user_page', user_id=request.user.id)
     return redirect('pathgame:user_page', user_id=request.user.id)
 
 
@@ -214,7 +210,7 @@ def subboard_delete(request, pk):
     subboard = get_object_or_404(SubBoard, pk=pk, owner=request.user)
     if request.method == 'POST':
         subboard.delete()
-        return redirect('pathgame:user_page', user_id=request.user.id)  # Replace with your user page URL name
+        return redirect('pathgame:user_page', user_id=request.user.id)
     return redirect('pathgame:user_page', user_id=request.user.id)
 
 
@@ -272,7 +268,7 @@ def update_subboard_name(request, pk):
         if new_name:
             subboard.name = new_name
             subboard.save()
-    return redirect('pathgame:subboard_editor', pk=subboard.pk)  # adjust this redirect
+    return redirect('pathgame:subboard_editor', pk=subboard.pk)
 
 
 
@@ -305,7 +301,6 @@ def create_path(request):
                 order = id + 1,
             )
             
-    # BoardPoint.objects.filter(board=board, row=row, col=col).exists():
         return JsonResponse({'status': 'success'})
 
     except Board.DoesNotExist:
@@ -324,9 +319,7 @@ def delete_path(request):
     try:
         data = json.loads(request.body)
         start = data.get('start')
-        # end = data.get('end')
         subboard_id = data.get('subboard')
-        # subboard = get_object_or_404(SubBoard, id=subboard_id, owner=request.user)
         
         
         start_point = PathPoint.objects.get(path__board=subboard_id, row=start[0], col=start[1])
