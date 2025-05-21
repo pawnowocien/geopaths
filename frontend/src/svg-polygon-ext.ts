@@ -1,7 +1,7 @@
 import { SVGPolygon } from "./svg-polygon.js";
 import { getCSRFToken } from "./csrf.js";
 import { getPaintColor } from "./color-state.js";
-import { getColor } from "./board-state.js";
+import { getColor, setColor } from "./board-state.js";
 
 export class SVGPolygonExtended extends SVGPolygon {
     board: number
@@ -117,43 +117,20 @@ export class SVGPolygonExtended extends SVGPolygon {
         group.addEventListener('click', () => {
 
             this.point_color = getPaintColor();
+            // Erase
             if (getPaintColor() === "") {
                 circle.style.display = 'none';
                 line1.style.display = 'none';
                 line2.style.display = 'none';
                 group.style.cursor = 'default';
-            } else {
+                setColor(this.row, this.col, getPaintColor())
+            } // Add/recolor 
+            else {
                 circle.setAttribute('opacity', '1');
                 circle.style.display = 'block';
                 group.style.cursor = 'default';
+                setColor(this.row, this.col, getPaintColor())
             }
-
-
-            fetch('/update_board_cell', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken()
-                },
-                body: JSON.stringify({
-                    row: this.row,
-                    col: this.col,
-                    board: this.board,
-                    color: this.point_color,
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error sending data:', error);
-            });
         });
 
         group.appendChild(polygon);

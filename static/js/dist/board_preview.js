@@ -17,4 +17,3 @@ if (sliderWidth && sliderHeight && selectShape && gridElement) {
 else {
     console.error('Slider or SVG grid elements not found, cannot attach event listeners.');
 }
-//# sourceMappingURL=board_preview.js.map

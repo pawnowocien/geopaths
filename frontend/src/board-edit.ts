@@ -1,8 +1,7 @@
 import { generateBoardSVG } from "./board-gen.js";
-import { BoardPoint } from "./data-models.js";
 import { setPaintColor } from "./color-state.js";
-import { setDim, setColor } from "./board-state.js";
-
+import { setDim, setColor, getColorMap } from "./board-state.js";
+import { getCSRFToken } from "./csrf.js";
 
 const UNSELECTED_CLASSES = ['border-black']
 const SELECTED_CLASSES = ['border-blue-300'];
@@ -54,6 +53,42 @@ if (scriptTag1 && scriptTag1.textContent && scriptTag2 && scriptTag2.textContent
         }
     }
     generateBoardSVG(boardData.width, boardData.height, boardData.type, gridElement, boardData.id);
+
+
+
+
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.addEventListener('click', () => {            
+            fetch('/update_board_cell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({
+                    board: boardData.id,
+                    color_map: getColorMap()
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                if (data.status === 'failure' && data.message) {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+        });
+    }
+
 } else {
     console.error('Board data script tag not found or empty');
 }

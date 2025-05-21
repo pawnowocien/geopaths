@@ -83,26 +83,32 @@ def update_board_cell(request):
 
     try:
         data = json.loads(request.body)
-        row = int(data.get('row'))
-        col = int(data.get('col'))
         board_id = int(data.get('board'))
-        color = str(data.get('color'))
+        color_map = data.get('color_map')
 
-        if row is None or col is None or board_id is None or color is None:
-            return JsonResponse({'error': 'Missing data'}, status=400)
+        colors = {}
+        for row_index, row in enumerate(color_map):
+            for col_index, value in enumerate(row):
+                if value not in colors.keys():
+                    colors[value] = []
+                colors[value].append((row_index, col_index))
         
+        for col in colors.keys():
+            if len(colors[col]) != 2 and col != "":
+                error_msg = "For each color there should be 0 or 2 points."
+                return JsonResponse({'status': 'failure', 'message': error_msg})
+                
         
         board = Board.objects.get(pk=board_id, creator=request.user)
         board.subboards.all().delete()
 
-        if BoardPoint.objects.filter(board=board, row=row, col=col).exists():
-            if color == "":
-                BoardPoint.objects.filter(board=board, row=row, col=col).delete()
-            else:
-                BoardPoint.objects.filter(board=board, row=row, col=col).update(color=color)
-        else:
-            if color != "":
-                BoardPoint.objects.create(board=board, row=row, col=col, color=color)
+        for color in colors.keys():
+            for row, col in colors[color]:
+                if color == "":
+                    BoardPoint.objects.filter(board=board, row=row, col=col).delete()
+                else:
+                    print(row, col, color)
+                    BoardPoint.objects.update_or_create(board=board, row=row, col=col, color=color)
 
         return JsonResponse({'status': 'success'})
 

@@ -33,6 +33,10 @@ export function setColor(row: number, col: number, color: string): void {
     point_map[row][col] = color;
 }
 
+export function getColorMap(): string[][] {
+    return point_map
+}
+
 export function setStatic(row: number, col: number) {
     static_map[row][col] = true;
 }

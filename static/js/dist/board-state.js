@@ -24,6 +24,9 @@ export function getColor(row, col) {
 export function setColor(row, col, color) {
     point_map[row][col] = color;
 }
+export function getColorMap() {
+    return point_map;
+}
 export function setStatic(row, col) {
     static_map[row][col] = true;
 }
@@ -272,7 +275,6 @@ export function handleClick(row, col) {
         });
         reset_path();
         setPaintColor("");
-        // make a line and send it
         return;
     }
 }
