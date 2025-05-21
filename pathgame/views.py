@@ -107,7 +107,6 @@ def update_board_cell(request):
                 if color == "":
                     BoardPoint.objects.filter(board=board, row=row, col=col).delete()
                 else:
-                    print(row, col, color)
                     BoardPoint.objects.update_or_create(board=board, row=row, col=col, color=color)
 
         return JsonResponse({'status': 'success'})

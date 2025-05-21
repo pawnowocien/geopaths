@@ -26,7 +26,7 @@
   ```
 
 
-## Features:
+## Features
 
 ### Board creator
 
@@ -45,3 +45,25 @@
 - Create paths between points using left-click and hover
 
 - Remove paths by right-clicking on them
+
+
+## Screenshots
+
+![Main Page](assets/sc01.png)
+
+
+![Board Creator 1](assets/sc02.png)
+
+![Board Creator 2](assets/sc03.png)
+
+![Board Creator 3](assets/sc04.png)
+
+
+![Board Editor 1](assets/sc05.png)
+
+![Board Editor 2](assets/sc06.png)
+
+![Board Editor 3](assets/sc07.png)
+
+
+![Path Editor](assets/sc08.png)

@@ -3,20 +3,29 @@
 {% block title %}Main Page{% endblock %}
 
 {% block content %}
-    <div class="max-w-4xl mx-auto p-6 space-y-8 text-center bg-black/30 rounded-xl shadow-lg">
-        <h2 class="text-4xl font-bold">
-            Welcome to <span class="text-blue-500">GeoPaths</span>
-        </h2>
+    <div class="max-w-6xl mx-auto p-6 space-y-8 text-center bg-black/30 rounded-xl shadow-lg">
+        <div class="relative flex justify-center items-center h-72 overflow-hidden">
+            
+        <svg class="absolute w-96 h-96 animate-spin opacity-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" stroke="cyan" stroke-width="0.5"/>
+            <path d="M50 2 L98 50 L50 98 L2 50 Z" stroke="magenta" stroke-width="0.3" fill="none"/>
+            <circle cx="50" cy="50" r="20" stroke="white" stroke-width="0.3"/>
+        </svg>
+
+        <h1 class="text-7xl font-semibold text-center text-white z-10 drop-shadow-[0_0_20px_rgba(0,255,255,0.6)]">
+            Welcome to <span class="text-neon">GeoPaths</span>
+        </h1>
+        </div>
         
-        <div class="text-lg text-gray-400 text-left flex flex-col gap-4"> 
+        <div class="max-w-4xl text-lg text-gray-400 text-left flex flex-col gap-4"> 
             <p> This is the sacred lattice. The Grid Eternal. Triangles whisper. Squares throb. Hexagons scream. You do not play — you commune.</p>
             <p> Each connection redraws the boundaries of reason. Every line defies Euclid. </p>
             <p> There is no win. There is only the Pattern. </p>
             <p> Connect. Or be unmade. </p>
-            <p class="text-right "> ChatGPT </p>
+            {% comment %} <p class="text-right "> ChatGPT </p> {% endcomment %}
         </div>
 
-        <div class="mt-10">
+        <div class="mt-10 max-w-4xl">
             <p class="text-md flex flex-col gap-6 text-sky-300">
                 {% if user.is_authenticated %}
                     <a href="{% url 'pathgame:user_page' user.id %}" class="group inline-flex items-center justify-center space-x-2 text-sky-200 hover:text-white px-4 py-2 rounded-lg border transition duration-200">
