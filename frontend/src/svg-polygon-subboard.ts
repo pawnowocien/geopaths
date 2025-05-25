@@ -27,9 +27,6 @@ export class SVGPolygonSubboard extends SVGPolygon {
         const group = document.createElementNS(xmlns, 'g');
         const polygon = super.draw();
 
-        const darkRed = '#420D09'
-        const width = String(radius / 4) 
-
         const circle = document.createElementNS(xmlns, 'circle');
         circle.setAttribute('cx', this.x.toString());
         circle.setAttribute('cy', this.y.toString());

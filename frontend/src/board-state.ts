@@ -124,7 +124,7 @@ export function createPath(color: string, points: [number, number][]): void {
         path_map[point[0]][point[1]] = true;
     }
 
-    const path: Path = new Path(tiles, color, radius, true);
+    new Path(tiles, color, radius, true);
 }
 
 let curr_path: Path | null = null;

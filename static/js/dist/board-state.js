@@ -103,7 +103,7 @@ export function createPath(color, points) {
         setColor(point[0], point[1], color);
         path_map[point[0]][point[1]] = true;
     }
-    const path = new Path(tiles, color, radius, true);
+    new Path(tiles, color, radius, true);
 }
 let curr_path = null;
 export function resetCurrPath() {

@@ -29,15 +29,11 @@ export class Path {
         circle.setAttribute('cx', getCoords(tile).x.toString());
         circle.setAttribute('cy', getCoords(tile).y.toString());
         let rad = this.width/2
-        // if (big) rad *= 3;
         circle.setAttribute('r', (rad).toString());
     
         circle.setAttribute('fill', this.color);
+        // circle.setAttribute('fill', "#000000");
         circle.setAttribute('id', tile.toString());
-        // if (path_id === "in-proc") {
-        //     circle.setAttribute('opacity', '0.5');
-        // }
-        // circle.setAttribute('data-path-id', path_id);
         this.delete = this.delete.bind(this);
         circle.addEventListener('contextmenu', this.delete);
         circle.addEventListener('mouseenter', () => this.check_to_remove(tile.row, tile.col));
@@ -118,6 +114,18 @@ export class Path {
         lines_overlay?.appendChild(this.group);
 
         this.generate();
+
+        if (finished) {
+            // Enlarge circles on the edges
+            const firstCircle = this.group.querySelector(`#${this.tiles[0].toString()}`) as SVGCircleElement | null;
+            if (firstCircle) {
+                firstCircle.setAttribute('r', ((this.width * 3) / 2).toString());
+            }
+            const lastCircle = this.group.querySelector(`#${this.tiles[this.tiles.length - 1].toString()}`) as SVGCircleElement | null;
+            if (lastCircle) {
+                lastCircle.setAttribute('r', ((this.width * 3) / 2).toString());
+            }
+        }
     }
 
     public add_point(tile: Tile): void {

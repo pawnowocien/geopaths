@@ -1,6 +1,5 @@
 import { SVGPolygon } from "./svg-polygon.js";
 import { SVGPolygonExtended } from "./svg-polygon-ext.js";
-import { BoardPoint } from "./data-models.js";
 import { SVGPolygonStatic } from "./svg-polygon-static.js"
 import { SVGPolygonSubboard } from "./svg-polygon-subboard.js"
 import { setOverlay, setSides, setRad } from "./board-state.js"
