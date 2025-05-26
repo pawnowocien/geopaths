@@ -66,4 +66,6 @@
 ![Board Editor 3](assets/sc07.png)
 
 
-![Path Editor](assets/sc08.png)
+![Path Editor 1](assets/sc08.png)
+
+![Path Editor 2](assets/sc09.png)
