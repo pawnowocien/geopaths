@@ -60,7 +60,7 @@ if (scriptTag1 && scriptTag1.textContent && scriptTag2 && scriptTag2.textContent
     const saveButton = document.getElementById('saveButton');
     if (saveButton) {
         saveButton.addEventListener('click', () => {            
-            fetch('/update_board_cell', {
+            fetch("/board/update_cell", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

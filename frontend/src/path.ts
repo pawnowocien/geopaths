@@ -182,7 +182,7 @@ export class Path {
 
         this.group.setAttribute('opacity', '1');
 
-        fetch('/create_path', {
+        fetch('/subboard/path/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: this.tiles.map(t => ({ row: t.row, col: t.col })), subboard: getBoardId() })
@@ -212,7 +212,7 @@ export class Path {
         eraseMaps(this.tiles)
         
 
-        fetch('/delete_path', {
+        fetch('/subboard/path/delete', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ start: [this.tiles[0].row, this.tiles[0].col], end: [this.get_last_tile().row, this.get_last_tile().col], subboard: getBoardId() })
