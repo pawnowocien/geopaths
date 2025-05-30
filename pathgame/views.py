@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import PermissionDenied
 from django.forms.models import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
+import time
 import json
 import pathgame.utils as utils
 
@@ -372,3 +373,29 @@ def custom_logout(request):
     logout(request)
     messages.success(request, "You have successfully logged out.")
     return redirect('pathgame:index')
+
+
+
+import queue
+import time
+from django.http import StreamingHttpResponse
+from pathgame.sse_manager import clients, clients_lock
+
+def sse_notifications(request):
+    client_queue = queue.Queue()
+    with clients_lock:
+        clients.add(client_queue)
+
+    def event_stream():
+        try:
+            while True:
+                try:
+                    event = client_queue.get(timeout=10)
+                    yield event
+                except queue.Empty:
+                    yield ": keep-alive\n\n"
+        finally:
+            with clients_lock:
+                clients.discard(client_queue)
+
+    return StreamingHttpResponse(event_stream(), content_type='text/event-stream')

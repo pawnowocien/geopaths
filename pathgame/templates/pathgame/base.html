@@ -11,19 +11,8 @@
     {% tailwind_css %}
 </head>
 <body class="bg-black">
-    {% if messages %}
-    <div class="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 space-y-3 p-4 w-80">
-        {% for message in messages %}
-        <div class="relative bg-opacity-90 text-white p-4 rounded-lg shadow-lg
-            {% if message.tags == 'success' %}bg-green-600{% else %}bg-red-600{% endif %}">
-            <span>{{ message }}</span>
-            <button onclick="this.parentElement.classList.add('hidden')" class="absolute top-2 right-3 text-white hover:text-gray-300 font-bold cursor-pointer">
-                &times;
-            </button>
-        </div>
-        {% endfor %}
-    </div>
-{% endif %}
+
+    <div id="notifications-container" class="fixed bottom-4 w-60 right-4 flex flex-col gap-2 z-50"></div>
     
     <header class="w-full h-20 bg-black flex items-center justify-between px-8 shadow-md border-b-2 border-sky-300">
         <div class="flex items-center space-x-4">
@@ -60,6 +49,20 @@
                         </button>
                     </form>
                 </div>
+                <script>
+                    function toggleDropdown() {
+                        const dropdown = document.getElementById('accountDropdown');
+                        dropdown.classList.toggle('hidden');
+                    }
+            
+                    document.addEventListener('click', function(event) {
+                        const dropdown = document.getElementById('accountDropdown');
+                        const button = event.target.closest('button');
+                        if (!dropdown.contains(event.target) && (!button || !button.onclick)) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+                </script>
             {% else %}
                 <a href="{% url 'pathgame:login' %}?next={{ request.path }}" class="bg-navy text-sky-200 hover:text-white px-4 py-2 rounded border-1">
                     Login
@@ -67,24 +70,11 @@
             {% endif %}
         </div>
     
-        <script>
-            function toggleDropdown() {
-                const dropdown = document.getElementById('accountDropdown');
-                dropdown.classList.toggle('hidden');
-            }
-    
-            document.addEventListener('click', function(event) {
-                const dropdown = document.getElementById('accountDropdown');
-                const button = event.target.closest('button');
-                if (!dropdown.contains(event.target) && (!button || !button.onclick)) {
-                    dropdown.classList.add('hidden');
-                }
-            });
-        </script>
     </header>
 
     <main class="max-w-8xl mx-auto bg-gradient-to-b from-navy to-black p-8 space-y-8 flex flex-col items-center text-sky-300">
         {% block content %}{% endblock %}
     </main>
+    <script type="module" src="{% static 'js/dist/base.js' %}"></script>
 </body>
 </html>
