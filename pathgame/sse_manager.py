@@ -27,6 +27,7 @@ def board_created(sender, instance, created, **kwargs):
             "board_name": instance.name,
             "creator_username": instance.creator.username,
             "creator_is_admin": instance.creator.is_superuser,
+            "creator_id": instance.creator.id,
         })
         
 @receiver(post_save, sender=SubBoard)
@@ -37,6 +38,7 @@ def subboard_created(sender, instance, created, **kwargs):
             "subboard_name": instance.name,
             "subboard_creator": instance.owner.username,
             "subboard_creator_is_admin": instance.owner.is_superuser,
+            "subboard_creator_id": instance.owner.id,
             "board_id": instance.board.id,
             "board_name": instance.board.name,
             "board_creator": instance.board.creator.username,
@@ -52,6 +54,7 @@ def path_created(sender, instance, created, **kwargs):
             "subboard_name": instance.board.name,
             "subboard_creator": instance.board.owner.username,
             "subboard_creator_is_admin": instance.board.owner.is_superuser,
+            "subboard_creator_id": instance.board.owner.id,
             "color": instance.color,
             "board_id": instance.board.board.id,
             "board_name": instance.board.board.name,

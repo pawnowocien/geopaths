@@ -36,12 +36,21 @@ function showNotification(message, isHtml = false) {
     }, 10000);
 }
 const eventSource = new EventSource("/sse/notifications/");
+const scriptTag1 = document.getElementById('user-id');
+let user_id = "";
+if (scriptTag1 && scriptTag1.textContent) {
+    user_id = scriptTag1.textContent;
+}
 eventSource.addEventListener("newBoard", (e) => {
     const data = JSON.parse(e.data);
     const board_id = data['board_id'];
     const board_name = data['board_name'];
     const creator_username = data['creator_username'];
     const creator_is_admin = data['creator_is_admin'];
+    const creator_id = data['creator_id'];
+    if (user_id == creator_id) {
+        return;
+    }
     let htmlMessage;
     if (!creator_is_admin) {
         htmlMessage = `
@@ -63,11 +72,15 @@ eventSource.addEventListener("newSubBoard", (e) => {
     const subboard_id = data["subboard_id"];
     const subboard_name = data["subboard_name"];
     const subboard_creator = data["subboard_creator"];
+    const creator_id = data['subboard_creator_id'];
     const board_id = data["board_id"];
     const board_name = data["board_name"];
     const board_creator = data["board_creator"];
     const subboard_creator_is_admin = data["subboard_creator_is_admin"];
     const board_creator_is_admin = data["board_creator_is_admin"];
+    if (user_id == creator_id) {
+        return;
+    }
     let subboard_creator_html = `<strong>${subboard_creator}</strong>`;
     let board_creator_html = `<strong>${board_creator}</strong>`;
     if (subboard_creator_is_admin) {
@@ -90,12 +103,16 @@ eventSource.addEventListener("newPath", (e) => {
     const subboard_id = data["subboard_id"];
     const subboard_name = data["subboard_name"];
     const subboard_creator = data["subboard_creator"];
+    const creator_id = data['subboard_creator_id'];
     const color = data["color"];
     const board_id = data["board_id"];
     const board_name = data["board_name"];
     const board_creator = data["board_creator"];
     const subboard_creator_is_admin = data["subboard_creator_is_admin"];
     const board_creator_is_admin = data["board_creator_is_admin"];
+    if (user_id == creator_id) {
+        return;
+    }
     let subboard_creator_html = `<strong>${subboard_creator}</strong>`;
     let board_creator_html = `<strong>${board_creator}</strong>`;
     if (subboard_creator_is_admin) {
