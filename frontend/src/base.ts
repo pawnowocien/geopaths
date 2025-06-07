@@ -60,7 +60,7 @@ eventSource.addEventListener("newBoard", (e) => {
     const creator_is_admin = data['creator_is_admin']
     const creator_id = data['creator_id']
 
-    if (user_id == creator_id) {
+    if (user_id == creator_id.toString()) {
         return;
     }
 
@@ -94,7 +94,7 @@ eventSource.addEventListener("newSubBoard", (e) => {
     const subboard_creator_is_admin = data["subboard_creator_is_admin"]
     const board_creator_is_admin = data["board_creator_is_admin"]
 
-    if (user_id == creator_id) {
+    if (user_id == creator_id.toString()) {
         return;
     }
 
@@ -133,7 +133,10 @@ eventSource.addEventListener("newPath", (e) => {
     const subboard_creator_is_admin = data["subboard_creator_is_admin"]
     const board_creator_is_admin = data["board_creator_is_admin"]
 
-    if (user_id == creator_id) {
+    console.log(user_id);
+    console.log(creator_id);
+
+    if (user_id == creator_id.toString()) {
         return;
     }
 

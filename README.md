@@ -46,6 +46,21 @@
 
 - Remove paths by right-clicking on them
 
+### SSE messages:
+
+- Receive real-time notifications when other users create objects such as Board, SubBoard, or Path.
+
+- Notifications appear in the bottom-right corner of the screen.
+
+- They automatically fade out after a short time, but users can also manually dismiss them by clicking the ✕ (close) button.
+
+- Messages are nicely formatted:
+
+  - Usernames are shown in red if the user is an admin.
+
+  - Path names are displayed in a color matching their name (e.g., "blue-path" appears in blue).
+
+
 
 ## Screenshots
 
@@ -69,3 +84,10 @@
 ![Path Editor 1](assets/sc08.png)
 
 ![Path Editor 2](assets/sc09.png)
+
+
+![SSE messages 1](assets/sc10.png)
+
+![SSE messages 2](assets/sc11.png)
+
+![SSE messages 3](assets/sc12.png)
